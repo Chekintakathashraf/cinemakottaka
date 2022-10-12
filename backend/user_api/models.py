@@ -39,6 +39,8 @@ class User(AbstractBaseUser,PermissionsMixin):
     username       = models.CharField(max_length=100, unique=True)
     email          = models.CharField(max_length=100, unique=True)
     phone_number   = models.CharField(max_length=100,unique=True)
+    first_name   = models.CharField(max_length=100,null=True)
+    last_name   = models.CharField(max_length=100,null=True)
     
     #required
     date_joined    = models.DateTimeField(auto_now_add=True)
@@ -59,6 +61,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     class Meta:
         verbose_name ='user'
         verbose_name_plural = 'users'
+        
      
     def __str__(self):
         return self.username
@@ -68,3 +71,11 @@ class User(AbstractBaseUser,PermissionsMixin):
     
     def has_module_perms(self, add_label):
         return True
+
+
+
+class UserToken(models.Model):
+    user_id = models.IntegerField()
+    token = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expired_at = models.DateTimeField()
