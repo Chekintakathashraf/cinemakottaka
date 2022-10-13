@@ -84,6 +84,7 @@ class LoginUserAPIView(APIView):
 
         # user = auth.authenticate(phone_number=phone_number, password=password)
         # print(user)
+        print('*')
         if user:
             access_token = create_access_token(user.id)
             refresh_token = create_refresh_token(user.id)
