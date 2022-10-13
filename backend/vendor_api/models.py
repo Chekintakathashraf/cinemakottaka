@@ -8,7 +8,6 @@ class Vendor(models.Model):
     email          = models.EmailField(max_length=100, unique=True)
     phone_number   = models.CharField(max_length=10,unique=True)
     password       = models.CharField(max_length=255)
-    confirm_password = models.CharField(max_length=255)
 
 
     
@@ -21,3 +20,12 @@ class Vendor(models.Model):
     
     def __str__(self):
         return self.email
+
+class VendorToken(models.Model):
+    vendor_id = models.IntegerField()
+    token = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expired_at = models.DateTimeField()
+
+    def __str__(self):
+        return str(self.vendor_id) +' '+ self.token
