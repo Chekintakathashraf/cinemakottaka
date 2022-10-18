@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'user_api',
     'vendor_api',
+    'admin_api',
 
     # all auth social login
     'django.contrib.sites',
