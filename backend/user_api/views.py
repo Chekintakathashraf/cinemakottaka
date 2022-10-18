@@ -20,7 +20,12 @@ class UserRegister(APIView):
     serializer_classes = UserSerializer
     
     def post(self, request):
+        print('------------------------------------------')
+        print(request)
+        print('------------------------------------------')
         data = request.data
+        print(data)
+        print('------------------------------------------')
         serializer = self.serializer_classes(data=data)
 
         if serializer.is_valid():
@@ -148,10 +153,95 @@ class LogoutUserAPIView(APIView):
         UserToken.objects.filter(token=refresh_token).delete()
         
         response = Response()
-        response.delete_cookie(key='refresh_token')
+        try:
+            response.delete_cookie(key='refresh_token')
+            response.delete_cookie(key='phone_number')
+        except:
+            response.delete_cookie(key='refresh_token')
         response.data={
             'message':'Now you are logout'
         }
         return response
 
-    
+class LoginUserWithOtpAPIView(APIView):
+    def post(self, request):
+        phone_number = request.data['phone_number']
+
+        user = User.objects.filter(phone_number=phone_number).first()
+        print(user)
+        if user is None:
+            response = Response()
+           
+            response.data={
+                'message':'Invalid phone_number'
+            }
+            return response
+
+        
+        if user:
+            
+            send(phone_number)
+            response = Response()
+            
+            response.set_cookie(key='phone_number',value=phone_number,httponly=True)
+            response.data = {
+               'phone_number':phone_number
+            }
+            return response
+        else:
+            response = Response()
+            response.data={
+                'message':'No user in this phone number'
+            }
+            return response 
+
+class VerifyLoginUserOtp(APIView):
+    def post(self,request):
+        try:
+            data=request.data
+            print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+            phone_number=request.COOKIES.get('phone_number')
+            print(phone_number)
+            code=data['code']
+            print(code)
+            if check(phone_number,code):
+                user = User.objects.filter(phone_number=phone_number).first()
+                print('&&&&&&&&&&&&&&&&&&&&&&&&&&&&')
+                print(user)
+                print(user)
+                if user:
+                    print('-------------------------------')
+                    # response.delete_cookie(key='phone_number')
+                    print('-------------------------------')
+                    access_token = create_access_token(user.id)
+                    print('-------------------------------')
+                    refresh_token = create_refresh_token(user.id)
+                    print('-------------------------------')
+                    UserToken.objects.create(
+                        user_id=user.id,
+                        token=refresh_token,
+                        expired_at=datetime.datetime.utcnow() + datetime.timedelta(days=7)
+                    )
+
+                    response = Response()
+                    
+                    response.set_cookie(key='refresh_token',value=refresh_token,httponly=True)
+                    response.data = {
+                        'token': access_token,
+                        'admin': user.is_admin,
+                        
+                    }
+                    return response
+                else:
+                    response = Response()
+                    response.data={
+                        'message':'Not verifiede'
+                    }
+                    return response 
+            else:
+                message = {'detail':'otp is not valid'}
+                
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            message = {'detail':'somthin whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)

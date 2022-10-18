@@ -175,3 +175,5 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'

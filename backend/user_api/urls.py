@@ -8,4 +8,9 @@ urlpatterns = [
     path('refreshuser/',views.RefreshUserAPIView.as_view(), name="refresh"),
     path('user/',views.UserAPIView.as_view(),name='user'),
     path('logoutuser/',views.LogoutUserAPIView.as_view(),name='logoutuser'),
+
+
+    path('loginuserwithotp/',views.LoginUserWithOtpAPIView.as_view(),name='loginuserwithotp'),
+    path('verifyloginuserotp/',views.VerifyLoginUserOtp.as_view(),name='verifyloginuserotp'),
+
 ]

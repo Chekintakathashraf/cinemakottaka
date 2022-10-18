@@ -15,6 +15,6 @@ def check(phone, code):
     try:
         result = verify.verification_checks.create(to=str('+91')+phone, code=code)
     except TwilioRestException:
-        print('no')
+        print('no  ckeck failed')
         return False
     return result.status == 'approved'
