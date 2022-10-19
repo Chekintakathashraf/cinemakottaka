@@ -1,5 +1,5 @@
 from django.db import models
-
+from admin_api.models import District,City
 # Create your models here.
 
 class Vendor(models.Model):
@@ -9,7 +9,8 @@ class Vendor(models.Model):
     phone_number   = models.CharField(max_length=10,unique=True)
     password       = models.CharField(max_length=255)
 
-
+    district       = models.ForeignKey(District,on_delete=models.CASCADE,null=True) 
+    city           = models.ForeignKey(City,on_delete=models.CASCADE,null=True) 
     
     create_date    = models.DateTimeField(auto_now_add=True)
     last_login     = models.DateTimeField(auto_now=True)

@@ -13,7 +13,7 @@ from . authentication import JWTVendorAuthentication,create_access_token,create_
 from rest_framework import exceptions
 from django.contrib.auth.hashers import check_password
 
-
+from django.core.mail import send_mail
 
 # Create your views here.
 
@@ -28,11 +28,19 @@ class VendorRegister(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            print('*****************************')
-            print(serializer.data)
-            print('*****************************')
 
-            print('*****************************')
+            print(serializer.data)
+
+            mailingemail=data['email']
+            print(mailingemail)
+            
+            send_mail('Hello  ',
+            'Thank You For Registering on CINEMA KOTTAKA ,Your Vendor Application is underprocess ',
+            'ashrafchekintakath@gmail.com'
+            ,[mailingemail]   
+            ,fail_silently=False)
+
+            
             response={
                 "data" : serializer.data
             }

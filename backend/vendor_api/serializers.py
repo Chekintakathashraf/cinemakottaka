@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import make_password
 class VendorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vendor
-        fields = ["first_name","last_name",'email',"phone_number","password"]  
+        fields = ["first_name","last_name",'email',"phone_number","password","district","city"]  
 
         extra_kwargs = {
             'password' : {'write_only' : True}
@@ -29,6 +29,8 @@ class VendorSerializer(serializers.ModelSerializer):
             phone_number=self.validated_data['phone_number'],
             # password=self.validated_data['password'], 
             password = make_password(self.validated_data['password']),
+            district = self.validated_data['district'],
+            city = self.validated_data['city'],
         )
         print(reg)
         

@@ -3,6 +3,6 @@ from .  models import Vendor
 # Register your models here.
 
 class VendorAdmin(admin.ModelAdmin):
-    list_display = ('id','first_name','email','is_active')
+    list_display = ('id','first_name','email','district','city','is_active')
 
 admin.site.register(Vendor,VendorAdmin)
