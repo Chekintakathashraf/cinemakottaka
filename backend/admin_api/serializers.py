@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from vendor_api.models import Vendor
 from user_api.models import User
-from . models import District,City
+from . models import District,City,Cityenquery
 
 class UpdateVendorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +30,8 @@ class CitySerializer(serializers.ModelSerializer):
         model = City
         fields = '__all__'
         
+
+class CityenquerySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cityenquery
+        fields = '__all__'

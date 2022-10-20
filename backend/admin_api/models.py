@@ -11,7 +11,15 @@ class District(models.Model):
 
 class City(models.Model):
     district = models.ForeignKey(District, on_delete=models.CASCADE)
-    city = models.CharField(max_length=255,unique=True)
+    city = models.CharField(max_length=255)
 
     def __str__(self):
         return self.city
+
+class Cityenquery(models.Model):
+    cityenqueryname = models.CharField(max_length=255)
+    district = models.ForeignKey(District, on_delete=models.CASCADE,null=True)
+    email = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.cityenqueryname
