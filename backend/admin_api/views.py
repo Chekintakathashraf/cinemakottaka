@@ -1,3 +1,4 @@
+from urllib import response
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny,IsAuthenticated,IsAdminUser
@@ -6,13 +7,18 @@ from user_api.authentication import JWTUserAuthentication
 from vendor_api.models import Vendor
 from user_api.serializers import UserSerializer
 from vendor_api.serializers import VendorSerializer
-from . serializers import UpdateVendorSerializer,UpdateUserSerializer,DistrictSerializer,CitySerializer
-from . models import District,City
+from . serializers import UpdateVendorSerializer,UpdateUserSerializer,DistrictSerializer,CitySerializer,CityenquerySerializer,CategorySerializer,MovieSerializer
+from . models import District,City,Cityenquery,Movie,Category
 from rest_framework.response import Response
 
 from django.core.mail import send_mail
+from django.template.defaultfilters import slugify
 
+import requests
+from django.conf import settings
 # Create your views here.
+
+
 
 class VerifyVendor(APIView):
     permission_classes=[IsAdminUser]
@@ -52,14 +58,19 @@ class BlockVendor(APIView):
     authentication_classes = [JWTUserAuthentication]
     def patch(self, request,id):
         details = Vendor.objects.get(id=id)
+        print('-------111111111-------------')
         if details.is_Vendor==True:
+            print('-------222222-------------')
             details.is_active=False
             details.is_Vendor=False
         else:
+            print('-------333333-------------')
             details.is_Vendor=True
         print(details.is_active)
-        serializer = UpdateUserSerializer(details,data=request.data,partial = True)
+        print('-------4444444444-------------')
+        serializer = UpdateVendorSerializer(details,data=request.data,partial = True)
         if serializer.is_valid():
+            print('-------5555555-------------')
             serializer.save()
             print("Vendor action Successfully")
             return Response(serializer.data)
@@ -263,3 +274,159 @@ class GetCitiesView(APIView):
         cities = City.objects.all()
         serializer = CitySerializer(cities,many=True)   
         return Response(serializer.data)
+
+class GetCityenqueryView(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request):
+    
+        cities = Cityenquery.objects.all()
+        serializer = CityenquerySerializer(cities,many=True)   
+        return Response(serializer.data)
+
+class ApproveCityenqueryView(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    def patch(self, request,id):
+        
+        cities = Cityenquery.objects.get(id=id)
+        cities.is_approved=True
+        print(cities.is_approved)
+        serializer = CityenquerySerializer(cities,data=request.data,partial = True)
+        if serializer.is_valid():
+            serializer.save()
+
+            print('-------------------')
+            print(cities.email)
+            print('---------------')
+
+            mailingemail= cities.email
+            print(mailingemail)
+            
+            send_mail('Hello  ',
+            'You have requested for The city on your registration.We are sorry for not verified that City.Now can register . Please register again.',
+            'ashrafchekintakath@gmail.com'
+            ,[mailingemail]   
+            ,fail_silently=False)
+
+
+            print("Vendor verified Successfully")
+            return Response(serializer.data)
+        else:
+            print("Vendor verification failed")
+            print(serializer.errors)
+            return Response(serializer.errors)
+    
+
+class AddCategoryView(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+
+    def post(self, request):
+        data = request.data
+        request.data._mutable=True
+        data['slug']=slugify(data['category_name'])
+        data.update(request.data)
+        serializer = CategorySerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors)
+
+
+class AddMoviesView(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+
+    def post(self, request):
+        serializer = MovieSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors)
+
+class BlockMovie(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    def patch(self, request,id):
+        movie = Movie.objects.get(id=id)
+        if movie.is_active==True:
+            movie.is_active=False
+        else:
+            movie.is_active=True
+        print(movie.is_active)
+        serializer = MovieSerializer(movie,data=request.data,partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            print("Movie action Successfully")
+            return Response(serializer.data)
+        else:
+            print("Movie action failed")
+            print(serializer.errors)
+            return Response(serializer.errors)
+
+class UpdateMovie(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    def patch(self, request,id):
+        movie = Movie.objects.get(id=id)
+        serializer = MovieSerializer(movie,data=request.data,partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            print("Movie update Successfully")
+            return Response(serializer.data)
+        else:
+            print("Movie update failed")
+            print(serializer.errors)
+            return Response(serializer.errors)
+    def delete(self, request,id):
+        details = Movie.objects.get(id=id)
+        details.delete()
+        return Response({'message':'Movie deleted'})
+    def put(self, request,id):
+        movie = Movie.objects.get(id=id)
+        serializer = MovieSerializer(movie,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            print("Movie update Successfully")
+            return Response(serializer.data)
+        else:
+            print("Movie update failed")
+            print(serializer.errors)
+            return Response(serializer.errors)
+
+
+class TMDBNowplayingMovies(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+
+    def get(self,request):
+        url='https://api.themoviedb.org/3/movie/now_playing?api_key='+settings.API_KEY
+        response=requests.get(url)
+        print(response)
+        data=response.json()
+        results=data['results']
+        # final=results[0]
+        # print(final['id'])
+        # print(final['original_title'])
+        
+        answer={}
+
+        for a in range(20):
+            final=results[a]
+            print(type(final))
+            print(final['id'])
+            print(final['original_title'])
+            
+            # answer[a]=final['id'],final['original_title']
+            answer[final['id']]=final['original_title']
+            
+        print('********************')
+        print(answer)
+        # return Response(results)
+        # return Response(data)
+        return Response(answer)

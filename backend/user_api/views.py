@@ -179,7 +179,7 @@ class LoginUserWithOtpAPIView(APIView):
 
         
         if user:
-            
+            print('otp sented')
             send(phone_number)
             response = Response()
             
