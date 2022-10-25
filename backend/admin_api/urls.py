@@ -27,6 +27,11 @@ urlpatterns = [
     path('addcategory/',views.AddCategoryView.as_view(),name='addcategory'),
 
     path('tmdbnowplayingmovies/',views.TMDBNowplayingMovies.as_view(),name='tmdbnowplayingmovies'),
+    # path('tmdbmoviedetails/<int:movie_id>/',views.TMDBMovieDetails.as_view(),name='tmdbmoviedetails'),
+    path('tmdbmoviedetails/<int:id>/',views.TMDBMovieDetails.as_view(),name='tmdbmoviedetails'),
+    path('moviedetails/',views.MovieDetails.as_view(),name='moviedetails'),
+
+    
     
     path('addmovie/',views.AddMoviesView.as_view(),name='addmovie'),
     path('blockmovie/<int:id>/',views.BlockMovie.as_view(),name='blockmovie'),

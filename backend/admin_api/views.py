@@ -430,3 +430,40 @@ class TMDBNowplayingMovies(APIView):
         # return Response(results)
         # return Response(data)
         return Response(answer)
+
+# class TMDBMovieDetails(APIView):
+#         permission_classes=[IsAdminUser]
+#         authentication_classes = [JWTUserAuthentication]
+
+#         def get(self,request,movie_id):
+#             url='https://api.themoviedb.org/3/movie/'+str(movie_id)+'?api_key='+settings.API_KEY
+#             response=requests.get(url)
+#             print(response)
+#             data=response.json()
+#             return Response(data)
+
+class TMDBMovieDetails(APIView):
+        permission_classes=[IsAdminUser]
+        authentication_classes = [JWTUserAuthentication]
+
+        def get(self,request,id):
+            print('************************************')
+            movie=Movie.objects.get(id=id)
+            print(movie)
+            movie_id=movie.tmdb_id
+            print('+++++++++++++++++++++++++')
+
+            url='https://api.themoviedb.org/3/movie/'+str(movie_id)+'?api_key='+settings.API_KEY
+            response=requests.get(url)
+            print(response)
+            data=response.json()
+            return Response(data)
+
+class MovieDetails(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request):
+    
+        movie = Movie.objects.all()
+        serializer =MovieSerializer(movie,many=True)   
+        return Response(serializer.data)
