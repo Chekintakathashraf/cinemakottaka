@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from . models import Vendor,ShowTime,ShowDate,Screen
+from . models import Vendor,ShowTime,ShowDate,Screen,Seat,Show
 from django.contrib.auth.hashers import make_password
 
 class VendorSerializer(serializers.ModelSerializer):
@@ -49,4 +49,9 @@ class ShowDateSerializer(serializers.ModelSerializer):
 class ScreenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Screen
+        fields = '__all__'
+
+class ShowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Show
         fields = '__all__'

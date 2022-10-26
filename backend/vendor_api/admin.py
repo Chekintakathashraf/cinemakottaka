@@ -6,7 +6,7 @@ class VendorAdmin(admin.ModelAdmin):
     list_display = ('id','first_name','email','district','city','is_active')
 
 class ShowAdmin(admin.ModelAdmin):
-    list_display = ('id','movie','vendor','screen','date','time')
+    list_display = ('id','movie','category_name','vendor','screen','date','time','is_active')
 
 class ScreenAdmin(admin.ModelAdmin):
     list_display = ('id','screen_name','vendor','total_seet')

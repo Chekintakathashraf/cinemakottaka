@@ -14,4 +14,6 @@ urlpatterns = [
     
     path('addscreen/',views.AddScreen.as_view(),name='addscreen'),
     path('updatescreen/<int:id>/',views.UpdateScreen.as_view(),name='updatescreen'),
+
+    path('addshow/',views.AddShow.as_view(),name='addshow'),
 ]

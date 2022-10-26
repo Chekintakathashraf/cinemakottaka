@@ -1,9 +1,10 @@
 import email
+from unicodedata import category
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from .serializers import VendorSerializer
-from .models import Screen, ShowTime, Vendor,VendorToken
+from .models import Screen, Show, ShowTime, Vendor,VendorToken
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -15,10 +16,10 @@ from django.contrib.auth.hashers import check_password
 
 from django.core.mail import send_mail
 
-from admin_api.models import City,Cityenquery
+from admin_api.models import City,Cityenquery, Movie,Category
 from admin_api.serializers import CityenquerySerializer
 
-from .serializers import ShowTimeSerializer,ShowDateSerializer,ScreenSerializer
+from .serializers import ShowTimeSerializer,ShowDateSerializer,ScreenSerializer,ShowSerializer
 
 # Create your views here.
 
@@ -377,5 +378,56 @@ class UpdateScreen(APIView):
                 print("Screen update failed")
                 print(serializer.errors)
                 return Response(serializer.errors)
+        else:
+            return Response('You are not supposed to take this action')
+
+class AddShow(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def post(self,request):
+        
+        data = request.data
+        request.data._mutable=True
+        vendor=request.user
+        id=Vendor.objects.get(email=vendor).id
+        data['vendor']=id
+        print('########            #############')
+        movie_id=data['movie']
+        category_name = Movie.objects.get(id=movie_id).category_name
+        category_name_id = Category.objects.get(category_name=category_name).id
+        print('-----        ---------')
+        print(category_name)
+        print(category_name_id)
+        data['category_name']=category_name_id
+
+
+
+        data.update(request.data)
+        print('----------0000000000000000----------------')
+        print(data)
+
+        screen1 = data['screen']
+
+        screen = Screen.objects.get(id=screen1)
+        print('^^^^^^^^^^^^^^^^^^^^^^^^')
+        print(screen.vendor)
+        print(vendor)
+        print('00000000000000000000000000000')
+        if screen.vendor==vendor:
+            if not Show.objects.filter(movie=data['movie'],vendor=data['vendor'],screen=data['screen'],date=data['date'],time=data['time'],category_name=data['category_name']).exists():
+                serializer = ShowSerializer(data=data)
+                if serializer.is_valid():
+                    serializer.save()
+                    
+                    print(serializer.data)
+                    
+                    response={
+                        "data" : serializer.data
+                    }
+                    return Response(response)
+                else:
+                    print(serializer.errors)
+                    return Response(serializer.errors)
+            else:
+                return Response('Show already exist')
         else:
             return Response('You are not supposed to take this action')

@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from admin_api.models import District,City,Movie,Category
 # Create your models here.
@@ -56,19 +57,23 @@ class Show(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE,null=True,blank=True)
     # screen = models.ForeignKey(Screen, on_delete=models.CASCADE,null=True,blank=True)
-    screen = models.OneToOneField(Screen,on_delete=models.CASCADE,null=True,blank=True)
+    screen = models.ForeignKey(Screen,on_delete=models.CASCADE,null=True,blank=True)
     date = models.ForeignKey(ShowDate, on_delete=models.CASCADE,null=True,blank=True)
     time = models.ForeignKey(ShowTime, on_delete=models.CASCADE,null=True,blank=True)
     category_name = models.ForeignKey(Category, on_delete=models.CASCADE,null=True,blank=True)
 
+    is_active = models.BooleanField(default=True)
+
     def __str__(self):
-        return self.movie
+        return str(self.movie)
 
 class Seat(models.Model):
     
     seet_no = models.CharField(max_length=3,null=True,blank=False)
     show = models.ForeignKey(Show, on_delete=models.CASCADE)
     screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
+    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE,null=True,blank=True)
+    booked_status = models.BooleanField(default=False)
 
     def __str__(self):
         return self.seet_no
