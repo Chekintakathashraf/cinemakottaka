@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from .serializers import VendorSerializer
-from .models import Vendor,VendorToken
+from .models import Screen, ShowTime, Vendor,VendorToken
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -17,6 +17,8 @@ from django.core.mail import send_mail
 
 from admin_api.models import City,Cityenquery
 from admin_api.serializers import CityenquerySerializer
+
+from .serializers import ShowTimeSerializer,ShowDateSerializer,ScreenSerializer
 
 # Create your views here.
 
@@ -241,3 +243,139 @@ class VendorAPIView(APIView):
         vendors=Vendor.objects.get(email=vendor.email)
         serializer=VendorSerializer(vendors,many=False)
         return Response(serializer.data)
+
+
+class AddShowTime(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def post(self,request):
+        
+        data = request.data
+        serializer = ShowTimeSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            
+            print(serializer.data)
+            
+            response={
+                "data" : serializer.data
+            }
+            return Response(response)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors)
+
+
+
+class AddShowDate(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def post(self,request):
+        
+        data = request.data
+        serializer = ShowDateSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            
+            print(serializer.data)
+            
+            response={
+                "data" : serializer.data
+            }
+            return Response(response)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors)
+
+class AddScreen(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def post(self,request):
+        
+        data = request.data
+        request.data._mutable=True
+        vendor=request.user
+        id=Vendor.objects.get(email=vendor).id
+        data['vendor']=id
+        data.update(request.data)
+        print('----------0000000000000000----------------')
+        print(data)
+        serializer = ScreenSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            
+            print(serializer.data)
+            
+            response={
+                "data" : serializer.data
+            }
+            return Response(response)
+        else:
+            print(serializer.errors)
+            return Response(serializer.errors)
+
+class UpdateScreen(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def patch(self, request,id):
+        
+        data = request.data
+        request.data._mutable=True
+        vendor=request.user
+        id2=Vendor.objects.get(email=vendor).id
+        data['vendor']=id2
+        data.update(request.data)
+        screen = Screen.objects.get(id=id)
+        print('^^^^^^^^^^^^^^^^^^^^^^^^')
+        print(screen.vendor)
+        print(vendor)
+        print('00000000000000000000000000000')
+        if screen.vendor==vendor:
+            serializer = ScreenSerializer(screen,data=request.data,partial = True)
+            if serializer.is_valid():
+                serializer.save()
+                print("Movie update Successfully")
+                return Response(serializer.data)
+            else:
+                print("Movie update failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        else:
+            return Response('You are not supposed to take this action')
+    def delete(self, request,id):
+        data = request.data
+        request.data._mutable=True
+        vendor=request.user
+        id2=Vendor.objects.get(email=vendor).id
+        data['vendor']=id2
+        data.update(request.data)
+        screen = Screen.objects.get(id=id)
+        print('^^^^^^^^^^^^^^^^^^^^^^^^')
+        print(screen.vendor)
+        print(vendor)
+        print('00000000000000000000000000000')
+        if screen.vendor==vendor:
+            screen.delete()
+            return Response({'message':'Screen deleted'})
+        else:
+            return Response('You are not supposed to take this action')
+    def put(self, request,id):
+        data = request.data
+        request.data._mutable=True
+        vendor=request.user
+        id2=Vendor.objects.get(email=vendor).id
+        data['vendor']=id2
+        data.update(request.data)
+        screen = Screen.objects.get(id=id)
+        print('^^^^^^^^^^^^^^^^^^^^^^^^')
+        print(screen.vendor)
+        print(vendor)
+        print('00000000000000000000000000000')
+        if screen.vendor==vendor:
+            serializer = ScreenSerializer(screen,data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                print("Screen update Successfully")
+                return Response(serializer.data)
+            else:
+                print("Screen update failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        else:
+            return Response('You are not supposed to take this action')
