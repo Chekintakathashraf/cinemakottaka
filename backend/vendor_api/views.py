@@ -1,4 +1,5 @@
 import email
+import datetime
 from unicodedata import category
 from django.shortcuts import render
 from rest_framework.views import APIView
@@ -398,6 +399,14 @@ class UpdateScreen(APIView):
 
             return Response(response,status=status.HTTP_400_BAD_REQUEST)
 
+class GetAllScreen(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request):
+
+        vendor=request.user
+        screen = Screen.objects.filter(vendor=vendor.id)
+        serializer =ScreenSerializer(screen,many=True)   
+        return Response(serializer.data)
 
 class AddShow(APIView):
     authentication_classes = [JWTVendorAuthentication]
@@ -491,6 +500,36 @@ class BlockShow(APIView):
 
             return Response(response,status=status.HTTP_400_BAD_REQUEST)
 
+class GetAllShows(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request):
+
+        vendor=request.user
+        show = Show.objects.filter(vendor=vendor.id)
+        serializer =ShowSerializer(show,many=True)   
+        return Response(serializer.data)
+
+class GetAllUpcomingShows(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request):
+
+        vendor=request.user
+        show = Show.objects.filter(vendor=vendor.id,date__date__gte=datetime.datetime.now())
+        print('**************************')
+        print(show)
+        serializer =ShowSerializer(show,many=True)   
+        return Response(serializer.data)
+
+class GetAllfinishedShows(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request):
+
+        vendor=request.user
+        show = Show.objects.filter(vendor=vendor.id,date__date__lte=datetime.datetime.now())
+        print('**************************')
+        print(show)
+        serializer =ShowSerializer(show,many=True)   
+        return Response(serializer.data)
 
 # class AddSeat(APIView):
 #     authentication_classes = [JWTVendorAuthentication]
@@ -595,6 +634,54 @@ class AddSeat(APIView):
             }
 
             return Response(response)
+        else:
+            response={
+                "messages" : 'You are not supposed to take this action',
+                
+            }
+
+            return Response(response,status=status.HTTP_400_BAD_REQUEST)
+
+class Bookedseatbyshow(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request,id):
+
+        vendor=request.user
+        show  = Show.objects.get(id=id)
+        if show.vendor==vendor:
+            booked_seat=Seat.objects.filter(show=show.id,booked_status=True)
+            serializer = SeatSerializer(booked_seat,many=True)
+            
+            response={
+                "data" : serializer.data
+            }
+            return Response(response)
+            
+        
+        else:
+            response={
+                "messages" : 'You are not supposed to take this action',
+                
+            }
+
+            return Response(response,status=status.HTTP_400_BAD_REQUEST)
+
+class UnBookedseatbyshow(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request,id):
+
+        vendor=request.user
+        show  = Show.objects.get(id=id)
+        if show.vendor==vendor:
+            booked_seat=Seat.objects.filter(show=show.id,booked_status=False)
+            serializer = SeatSerializer(booked_seat,many=True)
+            
+            response={
+                "data" : serializer.data
+            }
+            return Response(response)
+            
+        
         else:
             response={
                 "messages" : 'You are not supposed to take this action',

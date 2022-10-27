@@ -14,9 +14,15 @@ urlpatterns = [
     
     path('addscreen/',views.AddScreen.as_view(),name='addscreen'),
     path('updatescreen/<int:id>/',views.UpdateScreen.as_view(),name='updatescreen'),
+    path('getallscreen/',views.GetAllScreen.as_view(),name='getallscreen'),
 
     path('addshow/',views.AddShow.as_view(),name='addshow'),
     path('blockshow/<int:id>/',views.BlockShow.as_view(),name='blockshow'),
+    path('getallshow/',views.GetAllShows.as_view(),name='getallshow'),
+    path('getallupcomingshow/',views.GetAllUpcomingShows.as_view(),name='getallupcomingshow'),
+    path('getallfinishedshow/',views.GetAllfinishedShows.as_view(),name='getallfinishedshow'),
 
     path('addseat/',views.AddSeat.as_view(),name='addseat'),
+    path('bookedseatbyshow/<int:id>/',views.Bookedseatbyshow.as_view(),name='bookedseatbyshow'),
+    path('unbookedseatbyshow/<int:id>/',views.UnBookedseatbyshow.as_view(),name='unbookedseatbyshow'),
 ]
