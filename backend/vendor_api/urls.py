@@ -16,4 +16,7 @@ urlpatterns = [
     path('updatescreen/<int:id>/',views.UpdateScreen.as_view(),name='updatescreen'),
 
     path('addshow/',views.AddShow.as_view(),name='addshow'),
+    path('blockshow/<int:id>/',views.BlockShow.as_view(),name='blockshow'),
+
+    path('addseat/',views.AddSeat.as_view(),name='addseat'),
 ]

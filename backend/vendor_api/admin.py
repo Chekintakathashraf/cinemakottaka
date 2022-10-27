@@ -12,8 +12,8 @@ class ScreenAdmin(admin.ModelAdmin):
     list_display = ('id','screen_name','vendor','total_seet')
 
 
-# class SeetDateAdmin(admin.ModelAdmin):
-#     list_display = "__all__"
+class SeatAdmin(admin.ModelAdmin):
+    list_display = ('id','seet_no','show','screen','vendor','booked_status')
 
 # class ShowTimeAdmin(admin.ModelAdmin):
 #     list_display = ('id','date')
@@ -24,4 +24,4 @@ admin.site.register(Screen,ScreenAdmin)
 admin.site.register(ShowDate)
 admin.site.register(ShowTime)
 admin.site.register(Show,ShowAdmin)
-admin.site.register(Seat)
+admin.site.register(Seat,SeatAdmin)

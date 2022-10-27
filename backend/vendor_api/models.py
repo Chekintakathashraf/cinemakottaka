@@ -33,7 +33,7 @@ class VendorToken(models.Model):
         return str(self.vendor_id) +' '+ self.token
 
 class Screen(models.Model):
-    screen_name = models.CharField(max_length=1)
+    screen_name = models.CharField(max_length=20)
     vendor = models.ForeignKey(Vendor,on_delete=models.CASCADE,null=True) 
     total_seet = models.IntegerField()
 
@@ -65,7 +65,7 @@ class Show(models.Model):
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return str(self.movie)
+        return str(self.movie)+" "+str(self.date)+" "+str(self.time)
 
 class Seat(models.Model):
     

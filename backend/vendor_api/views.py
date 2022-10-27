@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from .serializers import VendorSerializer
-from .models import Screen, Show, ShowTime, Vendor,VendorToken
+from .models import Screen, Show, ShowTime, Vendor,VendorToken,Seat
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -19,7 +19,7 @@ from django.core.mail import send_mail
 from admin_api.models import City,Cityenquery, Movie,Category
 from admin_api.serializers import CityenquerySerializer
 
-from .serializers import ShowTimeSerializer,ShowDateSerializer,ScreenSerializer,ShowSerializer
+from .serializers import ShowTimeSerializer,ShowDateSerializer,ScreenSerializer,ShowSerializer,SeatSerializer
 
 # Create your views here.
 
@@ -338,24 +338,36 @@ class UpdateScreen(APIView):
                 print(serializer.errors)
                 return Response(serializer.errors)
         else:
-            return Response('You are not supposed to take this action')
-    def delete(self, request,id):
-        data = request.data
-        request.data._mutable=True
-        vendor=request.user
-        id2=Vendor.objects.get(email=vendor).id
-        data['vendor']=id2
-        data.update(request.data)
-        screen = Screen.objects.get(id=id)
-        print('^^^^^^^^^^^^^^^^^^^^^^^^')
-        print(screen.vendor)
-        print(vendor)
-        print('00000000000000000000000000000')
-        if screen.vendor==vendor:
-            screen.delete()
-            return Response({'message':'Screen deleted'})
-        else:
-            return Response('You are not supposed to take this action')
+            response={
+                "messages" : 'You are not supposed to take this action',
+                
+            }
+
+            return Response(response,status=status.HTTP_400_BAD_REQUEST)
+
+    # def delete(self, request,id):
+    #     data = request.data
+    #     request.data._mutable=True
+    #     vendor=request.user
+    #     id2=Vendor.objects.get(email=vendor).id
+    #     data['vendor']=id2
+    #     data.update(request.data)
+    #     screen = Screen.objects.get(id=id)
+    #     print('^^^^^^^^^^^^^^^^^^^^^^^^')
+    #     print(screen.vendor)
+    #     print(vendor)
+    #     print('00000000000000000000000000000')
+    #     if screen.vendor==vendor:
+    #         screen.delete()
+    #         return Response({'message':'Screen deleted'})
+    #     else:
+    #         response={
+    #             "messages" : 'You are not supposed to take this action',
+                
+    #         }
+
+    #         return Response(response,status=status.HTTP_400_BAD_REQUEST)
+
     def put(self, request,id):
         data = request.data
         request.data._mutable=True
@@ -379,7 +391,13 @@ class UpdateScreen(APIView):
                 print(serializer.errors)
                 return Response(serializer.errors)
         else:
-            return Response('You are not supposed to take this action')
+            response={
+                "messages" : 'You are not supposed to take this action',
+                
+            }
+
+            return Response(response,status=status.HTTP_400_BAD_REQUEST)
+
 
 class AddShow(APIView):
     authentication_classes = [JWTVendorAuthentication]
@@ -428,6 +446,159 @@ class AddShow(APIView):
                     print(serializer.errors)
                     return Response(serializer.errors)
             else:
-                return Response('Show already exist')
+                response={
+                "messages" : 'Show already exist',
+                
+            }
+
+            return Response(response,status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response('You are not supposed to take this action')
+            response={
+                "messages" : 'You are not supposed to take this action',
+                
+            }
+
+            return Response(response,status=status.HTTP_400_BAD_REQUEST)
+
+
+class BlockShow(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def patch(self, request,id):
+        show = Show.objects.get(id=id)
+        print(show.vendor)
+        vendor=request.user
+        print(vendor)
+        if vendor==show.vendor:
+            if show.is_active==True:
+                show.is_active=False
+            else:
+                show.is_active=True
+            print(show.is_active)
+            serializer = ShowSerializer(show,data=request.data,partial = True)
+            if serializer.is_valid():
+                serializer.save()
+                print("show action Successfully")
+                return Response(serializer.data)
+            else:
+                print("show action failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        else:
+            response={
+                "messages" : 'You are not supposed to take this action',
+                
+            }
+
+            return Response(response,status=status.HTTP_400_BAD_REQUEST)
+
+
+# class AddSeat(APIView):
+#     authentication_classes = [JWTVendorAuthentication]
+#     def post(self,request):
+        
+#         data = request.data
+#         request.data._mutable=True
+#         vendor=request.user
+#         id=Vendor.objects.get(email=vendor).id
+#         data['vendor']=id
+#         print('########            #############')
+        
+
+
+        
+#         data.update(request.data)
+#         print('----------0000000000000000----------------')
+#         print(data)
+
+#         screen1 = data['screen']
+#         show1=data['show']
+#         screen = Screen.objects.get(id=screen1)
+#         show = Show.objects.get(id=show1)
+#         print('^^^^^^^^^^^^^^^^^^^^^^^^')
+#         print(screen.vendor)
+#         print(show.vendor)
+#         print(vendor)
+        
+#         print('00000000000000000000000000000')
+#         if screen.vendor==vendor and show.vendor==vendor:
+            
+#             serializer = SeatSerializer(data=data)
+#             if serializer.is_valid():
+#                 serializer.save()
+                
+#                 print(serializer.data)
+                
+#                 response={
+#                     "data" : serializer.data
+#                 }
+#                 return Response(response)
+#             else:
+#                 print(serializer.errors)
+#                 return Response(serializer.errors)
+        
+#         else:
+#             response={
+#                 "messages" : 'You are not supposed to take this action',
+                
+#             }
+
+#             return Response(response,status=status.HTTP_400_BAD_REQUEST)
+
+
+class AddSeat(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def post(self,request):
+        
+        data = request.data
+        request.data._mutable=True
+        vendor=request.user
+        id=Vendor.objects.get(email=vendor).id
+        data['vendor']=id
+        print('########            #############')
+        
+
+
+        
+        data.update(request.data)
+        print('----------0000000000000000----------------')
+        print(data)
+
+        screen1 = data['screen']
+        show1=data['show']
+        screen = Screen.objects.get(id=screen1)
+        show = Show.objects.get(id=show1)
+        print('^^^^^^^^^^^^^^^^^^^^^^^^')
+        print(screen.vendor)
+        print(show.vendor)
+        print(vendor)
+        
+        print('00000000000000000000000000000')
+        if screen.vendor==vendor and show.vendor==vendor:
+            
+            for i in range(1,screen.total_seet+1):
+                if not Seat.objects.filter(seet_no=i,show=data['show'],screen=data['screen'],vendor=data['vendor'],).exists():
+                    data['seet_no']=i
+                    data.update(request.data)
+                    serializer = SeatSerializer(data=data)
+                    if serializer.is_valid():
+                        serializer.save()
+                        
+                        print(serializer.data)
+                        
+                        
+                    else:
+                        print(serializer.errors)
+                        return Response(serializer.errors)
+            response={
+                "messages" : 'seat added',
+                
+            }
+
+            return Response(response)
+        else:
+            response={
+                "messages" : 'You are not supposed to take this action',
+                
+            }
+
+            return Response(response,status=status.HTTP_400_BAD_REQUEST)

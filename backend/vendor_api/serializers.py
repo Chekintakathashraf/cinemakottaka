@@ -55,3 +55,8 @@ class ShowSerializer(serializers.ModelSerializer):
     class Meta:
         model = Show
         fields = '__all__'
+
+class SeatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Seat
+        fields = '__all__'
