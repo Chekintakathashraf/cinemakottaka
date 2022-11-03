@@ -284,6 +284,15 @@ class GetCityenqueryView(APIView):
         serializer = CityenquerySerializer(cities,many=True)   
         return Response(serializer.data)
 
+class GetUnapprovedCityenqueryView(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request):
+    
+        cities = Cityenquery.objects.all().exclude(is_approved=True) 
+        serializer = CityenquerySerializer(cities,many=True)  
+        return Response(serializer.data)
+
 class ApproveCityenqueryView(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
@@ -466,4 +475,15 @@ class MovieDetails(APIView):
     
         movie = Movie.objects.all()
         serializer =MovieSerializer(movie,many=True)   
+        return Response(serializer.data)
+
+class GetAllMovieByLanguage(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request,id):
+
+        
+        movie = Movie.objects.filter(category_name=id)
+        serializer =MovieSerializer(movie,many=True)
+         
         return Response(serializer.data)

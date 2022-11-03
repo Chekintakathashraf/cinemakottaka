@@ -52,4 +52,4 @@ class Movie(models.Model):
     is_active  = models.BooleanField(default=False,blank=True)
 
     def __str__(self):
-        return self.movie_name
+        return str(self.movie_name)+'-'+str(self.category_name)

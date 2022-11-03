@@ -1,5 +1,6 @@
 import email
 import datetime
+from datetime import time
 from unicodedata import category
 from django.shortcuts import render
 from rest_framework.views import APIView
@@ -408,6 +409,51 @@ class GetAllScreen(APIView):
         serializer =ScreenSerializer(screen,many=True)   
         return Response(serializer.data)
 
+class GetAllScreenByMovie(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request,id):
+
+        vendor=request.user
+        show=Show.objects.filter(vendor=vendor.id,movie=id)
+        screen = Screen.objects.filter(vendor=vendor.id)
+        # serializer =ScreenSerializer(screen,many=True)   
+        
+        serializer =ShowSerializer(show,many=True) 
+        print(serializer.data)
+        print('***********')
+        ans=[]
+        for i in serializer.data:
+            print(i['screen']) 
+            ans.append(i['screen'])
+
+        response = {
+            'screen':ans,
+            'showdetails': serializer.data
+        }
+        # return Response(serializer.data)
+        # return Response(ans)
+        return Response(response)
+
+class GetAllScreenByShow(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request,id):
+
+        vendor=request.user
+           
+        show = Show.objects.filter(vendor=vendor.id,id=id)
+        serializer =ShowSerializer(show,many=True)   
+        ans=[]
+        for i in serializer.data:
+            print(i['screen']) 
+            ans.append(i['screen'])
+
+        response = {
+            'screen':ans,
+            'showdetails': serializer.data
+        }
+        
+        return Response(response)
+
 class AddShow(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def post(self,request):
@@ -420,6 +466,10 @@ class AddShow(APIView):
         print('########            #############')
         movie_id=data['movie']
         category_name = Movie.objects.get(id=movie_id).category_name
+        moviename = Movie.objects.get(id=movie_id)
+        print(moviename)
+        print('@@@@@@@@@@@@@@@@@@@@@@')
+        print(moviename.movie_name)
         category_name_id = Category.objects.get(category_name=category_name).id
         print('-----        ---------')
         print(category_name)
@@ -440,7 +490,65 @@ class AddShow(APIView):
         print(vendor)
         print('00000000000000000000000000000')
         if screen.vendor==vendor:
-            if not Show.objects.filter(movie=data['movie'],vendor=data['vendor'],screen=data['screen'],date=data['date'],time=data['time'],category_name=data['category_name']).exists():
+            y=data['time']
+            print(y)
+            ttt=ShowTime.objects.get(id=y)
+            
+            ttttime=ttt.time
+            print(ttttime)
+            print(type(ttttime))
+           
+            intervel=datetime.time(2,58,00)
+            print(intervel)
+            print(type(intervel))
+
+            print('-------rough----------')
+
+            
+            
+            print('_______________________')
+            ttttimeseconds = (ttttime.hour * 60 + ttttime.minute) * 60 + ttttime.second
+            intervelseconds = (intervel.hour * 60 + intervel.minute) * 60 + intervel.second
+            print(ttttimeseconds)
+            print(intervelseconds)
+            print(type(ttttimeseconds))
+            print(type(intervelseconds))
+
+            print('--------------------')
+            s=str(datetime.timedelta(seconds=ttttimeseconds))
+            print(s)
+            print(type(s))
+            
+            print('---------------starting time-----------')
+            startingduration=ttttimeseconds-intervelseconds
+            print(startingduration)
+            
+
+            startingdurationuntime=datetime.timedelta(seconds=startingduration)
+            print(startingdurationuntime)
+            print(type(startingdurationuntime))
+
+            print('??????????????????????????')
+            s=str(startingdurationuntime)
+            
+
+            print('---------------ending time-----------')
+            endingduration=ttttimeseconds+intervelseconds
+            print(endingduration)
+
+            endingdurationuntime=datetime.timedelta(seconds=endingduration)
+            print(endingdurationuntime)
+            print(type(endingdurationuntime))
+            print('??????????????????????????')
+            e=str(endingdurationuntime)
+            
+            
+
+            print('}}}}}}}}}}}}}}}}}}}}}}}}}}')
+            # if not Show.objects.filter(movie=data['movie'],vendor=data['vendor'],screen=data['screen'],date=data['date'],time=data['time'],category_name=data['category_name']).exists():
+            # if not Show.objects.filter(vendor=data['vendor'],screen=data['screen'],date=data['date'],time=data['time']).exists():
+            if not Show.objects.filter(vendor=data['vendor'],screen=data['screen'],date=data['date'],time__time__range=[s, e]).exists():
+            # if not Show.objects.filter(vendor=data['vendor'],screen=data['screen'],date=data['date'],time__time__range=['16:30:00', '22:30:00']).exists():
                 serializer = ShowSerializer(data=data)
                 if serializer.is_valid():
                     serializer.save()
@@ -450,6 +558,13 @@ class AddShow(APIView):
                     response={
                         "data" : serializer.data
                     }
+
+
+                    
+
+
+
+
                     return Response(response)
                 else:
                     print(serializer.errors)
@@ -529,6 +644,56 @@ class GetAllfinishedShows(APIView):
         print('**************************')
         print(show)
         serializer =ShowSerializer(show,many=True)   
+        return Response(serializer.data)
+
+
+class GetAllShowsByMovie(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request,id):
+
+        vendor=request.user
+        show = Show.objects.filter(vendor=vendor.id,movie=id)
+        serializer =ShowSerializer(show,many=True)   
+        return Response(serializer.data)
+
+class GetAllShowsByScreen(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request,id):
+
+        vendor=request.user
+        show = Show.objects.filter(vendor=vendor.id,screen=id)
+        serializer =ShowSerializer(show,many=True)
+        
+        return Response(serializer.data)
+        
+class GetAllShowsByLanguage(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request,id):
+
+        vendor=request.user
+        show = Show.objects.filter(vendor=vendor.id,category_name=id)
+        serializer =ShowSerializer(show,many=True)
+         
+        return Response(serializer.data)
+        
+class GetAllShowsByTime(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request,id):
+
+        vendor=request.user
+        show = Show.objects.filter(vendor=vendor.id,time=id)
+        serializer =ShowSerializer(show,many=True)
+         
+        return Response(serializer.data)
+
+class GetAllShowsByDate(APIView):
+    authentication_classes = [JWTVendorAuthentication]
+    def get(self, request,id):
+
+        vendor=request.user
+        show = Show.objects.filter(vendor=vendor.id,date=id)
+        serializer =ShowSerializer(show,many=True)
+         
         return Response(serializer.data)
 
 # class AddSeat(APIView):
@@ -628,6 +793,13 @@ class AddSeat(APIView):
                     else:
                         print(serializer.errors)
                         return Response(serializer.errors)
+                else:
+                    response={
+                        "messages" : 'seat already added',
+                
+                    }
+
+            return Response(response)
             response={
                 "messages" : 'seat added',
                 

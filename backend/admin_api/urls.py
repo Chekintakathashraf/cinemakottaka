@@ -21,19 +21,22 @@ urlpatterns = [
     path('getcities/',views.GetCitiesView.as_view(),name='getcities'),
 
     path('getcityenquery/',views.GetCityenqueryView.as_view(),name='getcityenquery'),
+    path('getunapprovedcityenquery/',views.GetUnapprovedCityenqueryView.as_view(),name='getunapprovedcityenquery'),
     path('approvecityenquery/<int:id>/',views.ApproveCityenqueryView.as_view(),name='approvecityenquery'),
 
 
     path('addcategory/',views.AddCategoryView.as_view(),name='addcategory'),
 
     path('tmdbnowplayingmovies/',views.TMDBNowplayingMovies.as_view(),name='tmdbnowplayingmovies'),
-    # path('tmdbmoviedetails/<int:movie_id>/',views.TMDBMovieDetails.as_view(),name='tmdbmoviedetails'),
-    path('tmdbmoviedetails/<int:id>/',views.TMDBMovieDetails.as_view(),name='tmdbmoviedetails'),
-    path('moviedetails/',views.MovieDetails.as_view(),name='moviedetails'),
-
-    
-    
     path('addmovie/',views.AddMoviesView.as_view(),name='addmovie'),
     path('blockmovie/<int:id>/',views.BlockMovie.as_view(),name='blockmovie'),
     path('updatemovie/<int:id>/',views.UpdateMovie.as_view(),name='updatemovie'),
+    path('moviedetails/',views.MovieDetails.as_view(),name='moviedetails'),
+    path('getallmoviebylanguage/<int:id>/',views.GetAllMovieByLanguage.as_view(),name='getallmoviebylanguage'),
+    path('tmdbmoviedetails/<int:id>/',views.TMDBMovieDetails.as_view(),name='tmdbmoviedetailsbymovieid'),
+    
+
+    
+    
+    
 ]

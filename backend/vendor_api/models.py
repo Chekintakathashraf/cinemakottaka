@@ -41,7 +41,7 @@ class Screen(models.Model):
         return self.screen_name
 
 class ShowTime(models.Model):
-    time = models.TimeField()
+    time = models.TimeField(null=True)
     
     def __str__(self):
         return str(self.time)+'--'+str(self.id)
