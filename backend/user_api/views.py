@@ -8,6 +8,15 @@ from rest_framework import status
 from . import verify
 from .verify import send,check
 
+from admin_api . models import Category,City,District,Movie
+from admin_api . serializers import CategorySerializer,DistrictSerializer,CitySerializer,MovieSerializer,UpdateUserSerializer
+
+from vendor_api . models import Show,ShowDate,ShowTime
+from vendor_api . serializers import ShowSerializer,ShowDateSerializer,ShowTimeSerializer
+
+import requests
+from django.conf import settings
+
 
 import datetime
 from django.contrib import auth
@@ -245,3 +254,150 @@ class VerifyLoginUserOtp(APIView):
         except:
             message = {'detail':'somthin whent worng'}
             return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+class GetDistrictsView(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request):
+    
+        districts = District.objects.all()
+        serializer = DistrictSerializer(districts,many=True)   
+        return Response(serializer.data)
+
+class GetCityByDistrictView(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request,id):
+    
+        city = City.objects.filter(district=id)
+        serializer = CitySerializer(city,many=True)   
+        return Response(serializer.data)
+
+class SelectlocationView(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def patch(self, request):
+        user=request.user
+        data=request.data
+        print(user)
+        print(data)
+        userr=User.objects.get(username=user)
+        print(userr)
+        serializer = UpdateUserSerializer(userr,data,partial = True)   
+        if serializer.is_valid():
+            serializer.save()
+            print("location update Successfully")
+            response={
+                'message':'location update Successfully',
+                "data" : serializer.data
+            }
+            return Response(response)
+        else:
+            print("location update failed")
+            print(serializer.errors)
+            return Response(serializer.errors)
+
+class AllMovieDetails(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request):
+        userr=request.user
+        print(userr)
+        print(userr.city)
+
+
+
+        movie = Movie.objects.filter(is_active=True)
+        serializer =MovieSerializer(movie,many=True)   
+        return Response(serializer.data)    
+
+class AllMovieDetailsByLanguage(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request,id):
+        userr=request.user
+        print(userr)
+        print(userr.city)
+
+
+
+        movie = Movie.objects.filter(is_active=True,category_name=id)
+        if movie:
+            serializer =MovieSerializer(movie,many=True)   
+            return Response(serializer.data)  
+        else:
+            return Response('No Theaters are showing this movie in your location')
+
+class TMDBMovieDetails(APIView):
+        authentication_classes = [JWTUserAuthentication]
+
+        def get(self,request,id):
+            print('************************************')
+            movie=Movie.objects.get(id=id)
+            print(movie)
+            movie_id=movie.tmdb_id
+            print('+++++++++++++++++++++++++')
+
+            url='https://api.themoviedb.org/3/movie/'+str(movie_id)+'?api_key='+settings.API_KEY
+            response=requests.get(url)
+            print(response)
+            data=response.json()
+            return Response(data)
+
+class Theaterofthatmovie(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request,id):
+        userr=request.user
+        print(userr)
+        print(userr.city)
+        usercity=userr.city
+
+        moviess=Movie.objects.get(id=id)
+        print('****************')
+        print(moviess)
+
+
+        show = Show.objects.filter(is_active=True,vendor__city=usercity,movie=moviess)
+        if show :
+            serializer =ShowSerializer(show,many=True)   
+            print('__________________')
+            print(serializer.data[0])
+            print('***********')
+            print(len(serializer.data))
+
+            ans=[]
+            for i in serializer.data:
+                print(i['vendor']) 
+                ans.append(i['vendor'])
+
+            response = {
+                'vendor':ans,
+                'showdetails': serializer.data
+            }
+            
+            return Response(response)
+        else:
+            return Response('No Theaters are showing this movie in your location')
+
+class GetAllShowsDate(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request):
+
+        
+        date = ShowDate.objects.all()
+        serializer =ShowDateSerializer(date,many=True)   
+        return Response(serializer.data)
+
+
+class GetAllTimeDate(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request):
+
+        
+        time = ShowTime.objects.all()
+        serializer =ShowTimeSerializer(time,many=True)   
+        return Response(serializer.data)
+
+# class GetAllShows(APIView):
+#     authentication_classes = [JWTUserAuthentication]
+#     def get(self, request):
+
+#         userr=request.user
+#         show = Show.objects.filter(vendor=vendor.id)
+#         serializer =ShowSerializer(show,many=True)   
+#         return Response(serializer.data)

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager,PermissionsMixin
-
+from admin_api . models import District,City
 # Create your models here.
 
 class myAccountManager(BaseUserManager):
@@ -49,6 +49,9 @@ class User(AbstractBaseUser,PermissionsMixin):
     is_staff       = models.BooleanField(default=False)
     is_active      = models.BooleanField(default=False)
     is_superuser  = models.BooleanField(default=False)
+
+    district = models.ForeignKey(District, on_delete=models.CASCADE,null=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE,null=True)
     
       
     USERNAME_FIELD  = 'username'

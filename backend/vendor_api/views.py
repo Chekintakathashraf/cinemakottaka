@@ -441,7 +441,9 @@ class GetAllScreenByShow(APIView):
         vendor=request.user
            
         show = Show.objects.filter(vendor=vendor.id,id=id)
-        serializer =ShowSerializer(show,many=True)   
+        serializer =ShowSerializer(show,many=True)  
+        print('_________________') 
+        print(serializer.data)
         ans=[]
         for i in serializer.data:
             print(i['screen']) 
