@@ -3,6 +3,8 @@
 from django.db import models
 from django.urls import reverse
 
+# from user_api . models import BokkingTicket,User
+# from vendor_api . models import Screen,Show
 # Create your models here.
 
 class District(models.Model):
@@ -53,3 +55,13 @@ class Movie(models.Model):
 
     def __str__(self):
         return str(self.movie_name)+'-'+str(self.category_name)
+
+
+# class BrokerCharge(models.Model):
+#     ticket = models.ForeignKey(BokkingTicket, on_delete=models.CASCADE)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
+#     show = models.ForeignKey(Show, on_delete=models.CASCADE)
+
+#     def __str__(self):
+#         return Screen

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from . models import User,BokkingTicket
+from . models import User,BokkingTicket,BrokerCharge
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -37,4 +37,7 @@ class BookingTicketSerializer(serializers.ModelSerializer):
         model = BokkingTicket
         fields = '__all__'
 
-        
+class BrokerChargeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BrokerCharge
+        fields = '__all__'      

@@ -30,5 +30,6 @@ urlpatterns = [
     path('availableseatofshow/<int:id>/',views.AvailableSeatofshow.as_view(),name='availableseatofshow'),
 
     path('bookticket/',views.BookTicket.as_view(),name='bookticket'),
+    path('payment/<int:id>/',views.Payment.as_view(),name='payment'),
 
 ]

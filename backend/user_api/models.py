@@ -86,6 +86,7 @@ class UserToken(models.Model):
 
 class BokkingTicket(models.Model):
     price = models.FloatField(default=0)
+    brokerfee = models.FloatField(default=0)
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     show = models.ForeignKey(Show,on_delete=models.CASCADE)
     screen = models.ForeignKey(Screen,on_delete=models.CASCADE)
@@ -94,3 +95,15 @@ class BokkingTicket(models.Model):
 
     def __str__(self):
         return str(self.id)+ str(self.seat_no)
+
+class BrokerCharge(models.Model):
+    # ticket = models.ForeignKey(BokkingTicket, on_delete=models.CASCADE)
+    ticket= models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
+    show = models.ForeignKey(Show, on_delete=models.CASCADE)
+    # brokerfee = models.ForeignKey(BokkingTicket,on_delete=models.CASCADE,null=True)
+    brokerfee = models.FloatField(default=0)
+
+    def __str__(self):
+        return str(Screen)

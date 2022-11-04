@@ -16,6 +16,10 @@ from django.template.defaultfilters import slugify
 
 import requests
 from django.conf import settings
+
+
+from user_api . models import BokkingTicket,BrokerCharge
+from user_api . serializers import BookingTicketSerializer,BrokerChargeSerializer
 # Create your views here.
 
 
@@ -485,5 +489,27 @@ class GetAllMovieByLanguage(APIView):
         
         movie = Movie.objects.filter(category_name=id)
         serializer =MovieSerializer(movie,many=True)
+         
+        return Response(serializer.data)
+
+class GetAllBookedDetails(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request):
+
+        
+        ticket = BokkingTicket.objects.all()
+        serializer =BookingTicketSerializer(ticket,many=True)
+         
+        return Response(serializer.data)
+
+class GetAllBrokerCharge(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request):
+
+        
+        ticket = BrokerCharge.objects.all()
+        serializer =BrokerChargeSerializer(ticket,many=True)
          
         return Response(serializer.data)

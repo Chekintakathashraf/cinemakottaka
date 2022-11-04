@@ -37,6 +37,7 @@ urlpatterns = [
     
 
     
-    
+    path('getbookingdetails/',views.GetAllBookedDetails.as_view(),name='getbookingdetails'),
+    path('getbrokerchargedetails/',views.GetAllBrokerCharge.as_view(),name='getbrokerchargedetails'),
     
 ]

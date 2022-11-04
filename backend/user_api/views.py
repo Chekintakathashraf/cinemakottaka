@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny,IsAuthenticated,IsAdminUser
-from .models import User
-from .serializers import UserSerializer,VerifyOtpSerializer,BookingTicketSerializer
+from .models import User,BokkingTicket,BrokerCharge
+from .serializers import UserSerializer,VerifyOtpSerializer,BookingTicketSerializer,BrokerChargeSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from . import verify
@@ -634,6 +634,7 @@ class BookTicket(APIView):
 
 
         data['price']=grandtotal
+        data['brokerfee']=brokercharger
         data.update(request.data)
         print(data)
 
@@ -659,10 +660,51 @@ class BookTicket(APIView):
                 "brokercharge":brokercharger,
                 'ticketpriceperseat':priceperticket,
                 'totalticketprice':ticketprice,
-                'grandtotal':grandtotal
+                'grandtotal':grandtotal,
+                'brokercharger':brokercharger
 
             }
             return Response(response)
         else:
         #     print(serializer.errors)
+            return Response(serializer.errors)
+
+class Payment(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def patch(self, request,id):
+        user=request.user
+        data=request.data
+        print(user)
+        print(data)
+        tticket=BokkingTicket.objects.get(id=id)
+        print('8888888888888888888888')
+        print(tticket)
+        print(tticket.id)
+        print(tticket.brokerfee)
+        print('9999999999999999999999')
+        broker = BrokerCharge.objects.create(
+            ticket=tticket.id,
+            user=tticket.user,
+            show=tticket.show,
+            screen=tticket.screen,
+            brokerfee=tticket.brokerfee
+            )
+        print(broker)
+        data['is_paid']=True
+        serializer = BookingTicketSerializer(tticket,data,partial = True)   
+        if serializer.is_valid():
+            serializer.save()
+            for i in serializer.data['seat_no']:
+                seat=Seat.objects.get(id=i)
+                seat.booked_status=True
+                print(seat.booked_status)
+                print('-------------')
+                seat.save()
+            response={
+                'message':'payment Successfull',
+                "data" : serializer.data
+            }
+            return Response(response)
+        else:
+            print(serializer.errors)
             return Response(serializer.errors)
