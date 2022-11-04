@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny,IsAuthenticated,IsAdminUser
 from .models import User
-from .serializers import UserSerializer,VerifyOtpSerializer
+from .serializers import UserSerializer,VerifyOtpSerializer,BookingTicketSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from . import verify
@@ -11,8 +11,8 @@ from .verify import send,check
 from admin_api . models import Category,City,District,Movie
 from admin_api . serializers import CategorySerializer,DistrictSerializer,CitySerializer,MovieSerializer,UpdateUserSerializer
 
-from vendor_api . models import Show,ShowDate,ShowTime
-from vendor_api . serializers import ShowSerializer,ShowDateSerializer,ShowTimeSerializer
+from vendor_api . models import Show,ShowDate,ShowTime,Vendor,Seat
+from vendor_api . serializers import ShowSerializer,ShowDateSerializer,ShowTimeSerializer,VendorSerializer,SeatSerializer
 
 import requests
 from django.conf import settings
@@ -305,7 +305,21 @@ class AllMovieDetails(APIView):
 
         movie = Movie.objects.filter(is_active=True)
         serializer =MovieSerializer(movie,many=True)   
-        return Response(serializer.data)    
+        return Response(serializer.data)   
+
+
+class AllMovieCategory(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request):
+        userr=request.user
+        print(userr)
+        print(userr.city)
+
+
+
+        category = Category.objects.all()
+        serializer =CategorySerializer(category,many=True)   
+        return Response(serializer.data) 
 
 class AllMovieDetailsByLanguage(APIView):
     authentication_classes = [JWTUserAuthentication]
@@ -356,7 +370,7 @@ class Theaterofthatmovie(APIView):
         if show :
             serializer =ShowSerializer(show,many=True)   
             print('__________________')
-            print(serializer.data[0])
+            print(serializer.data)
             print('***********')
             print(len(serializer.data))
 
@@ -373,6 +387,22 @@ class Theaterofthatmovie(APIView):
             return Response(response)
         else:
             return Response('No Theaters are showing this movie in your location')
+
+class GetTheaterbyCity(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    serializer_classes = UserSerializer
+    def get(self, request):
+        user=request.user
+        userr=User.objects.get(username=user)
+        print(userr)
+        print(userr.city)
+        
+        theater = Vendor.objects.filter(city=userr.city)
+        if theater:
+            serializer = VendorSerializer(theater,many=True)   
+            return Response(serializer.data)
+        else:
+            return Response('No Theaters are in your location')
 
 class GetAllShowsDate(APIView):
     authentication_classes = [JWTUserAuthentication]
@@ -393,11 +423,145 @@ class GetAllTimeDate(APIView):
         serializer =ShowTimeSerializer(time,many=True)   
         return Response(serializer.data)
 
-# class GetAllShows(APIView):
-#     authentication_classes = [JWTUserAuthentication]
-#     def get(self, request):
+class GetAllShowsbyYourChoice(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request,date,time,vendor,movie):
+        print('******000000')
+        userr=request.user
+        show = Show.objects.filter(date=date,time=time,vendor=vendor,movie=movie,is_active=True)
+        print('******000000')
+        if show:
+            serializer =ShowSerializer(show,many=True)   
+            print('****************************************************')
+            print(serializer.data)
+            ans=[]
+            shw=[]
+            for i in serializer.data:
+                print(i['screen']) 
+                ans.append(i['screen'])
+            for i in serializer.data:
+                print(i['id']) 
+                shw.append(i['id'])
+            response = {
+                'screen':ans,
+                'show':shw,
+                'showdetails': serializer.data
+            }
+            return Response(response)  
+        else:
+            return Response('No Shows are available on your location')
 
-#         userr=request.user
-#         show = Show.objects.filter(vendor=vendor.id)
-#         serializer =ShowSerializer(show,many=True)   
-#         return Response(serializer.data)
+class GetSeatofshow(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request,id):
+
+        
+        seat = Seat.objects.filter(show=id)
+        if seat:
+            serializer =SeatSerializer(seat,many=True)
+            return Response(serializer.data)  
+        else:
+            return Response('No Shows are available on your location')
+
+
+class BookedSeatofshow(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request,id):
+
+        
+        seat = Seat.objects.filter(show=id,booked_status=True)
+        if seat:
+            serializer =SeatSerializer(seat,many=True)
+            shw=[]
+            
+            for i in serializer.data:
+                print(i['seet_no']) 
+                shw.append(i['seet_no'])
+            response = {
+                'seat':shw,
+                'seatdetails': serializer.data
+            }
+            return Response(response)  
+        else:
+            return Response('no seats are booked')
+
+class AvailableSeatofshow(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    def get(self, request,id):
+
+        
+        seat = Seat.objects.filter(show=id,booked_status=False)
+        if seat:
+            serializer =SeatSerializer(seat,many=True)
+            shw=[]
+            
+            for i in serializer.data:
+                print(i['seet_no']) 
+                shw.append(i['seet_no'])
+            response = {
+                'seat':shw,
+                'seatdetails': serializer.data
+            }
+            return Response(response)  
+        else:
+            return Response('no seats are available')
+
+
+class BookTicket(APIView):
+    authentication_classes = [JWTUserAuthentication]
+    serializer_classes = BookingTicketSerializer
+    def post(self,request):
+        data = request.data
+        # request.data._mutable=True
+        userr=request.user
+        print(userr)
+        id=User.objects.get(username=userr).id
+        data['user']=id
+        data.update(request.data)
+        print(data)
+        print('-----------------------------------------------------------------')
+
+        
+        print(data['seat_no'])
+        print(type(data['seat_no']))
+        for i in data['seat_no']:
+            id=i
+            print('========')
+            print(id)
+            seat=Seat.objects.get(id=id)
+            print(seat.booked_status)
+            if seat.booked_status==True:
+                responce={
+                    'message': 'The seat is booked by another user',
+                    'seat_no': i
+                }
+                return Response(responce,status=status.HTTP_404_NOT_FOUND)
+        print('^^^^^^^^^^^^^^^^^^^')
+
+        # request.data._mutable=True
+        # userr=request.user
+        # print(userr)
+        # id=User.objects.get(username=userr).id
+        # data['user']=id
+        # data.update(request.data)
+        print('----------0000000000000000----------------')
+        print(data)
+        print(type(data))
+        print('----------0000000000000000----------------')
+        serializer = self.serializer_classes(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            
+            print(serializer.data)
+            print('********************')
+            for i in serializer.data['seat_no']:
+                seat=Seat.objects.get(id=i)
+                seat.booked_status=True
+                print(seat.booked_status)
+                print('-------------')
+                seat.save()
+            
+            return Response(serializer.data)
+        else:
+        #     print(serializer.errors)
+            return Response(serializer.errors)

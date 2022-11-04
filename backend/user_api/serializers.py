@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from . models import User
+from . models import User,BokkingTicket
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,3 +31,10 @@ class VerifyOtpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['is_active']
+
+class BookingTicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BokkingTicket
+        fields = '__all__'
+
+        

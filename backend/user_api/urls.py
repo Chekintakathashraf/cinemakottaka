@@ -17,10 +17,18 @@ urlpatterns = [
     path('allcitybydistrict/<int:id>/',views.GetCityByDistrictView.as_view(),name='allcitybydistrict'),
     path('selectlocation/',views.SelectlocationView.as_view(),name='selectlocation'),
     path('getallmoviebycity/',views.AllMovieDetails.as_view(),name='getallmoviebycity'),
+    path('getallmoviecategory/',views.AllMovieCategory.as_view(),name='getallmoviecategory'),
     path('getallmoviebycitybylanguage/<int:id>/',views.AllMovieDetailsByLanguage.as_view(),name='getallmoviebycity'),
     path('tmdbmoviedetails/<int:id>/',views.TMDBMovieDetails.as_view(),name='tmdbmoviedetailsbymovieid'),
     path('theater/<int:id>/',views.Theaterofthatmovie.as_view(),name='theater'),
+    path('theaterbycity/',views.GetTheaterbyCity.as_view(),name='theaterbycity'),
     path('showdate/',views.GetAllShowsDate.as_view(),name='showdate'),
     path('showtime/',views.GetAllTimeDate.as_view(),name='showtime'),
+    path('showbychoice/<int:date>/<int:time>/<int:vendor>/<int:movie>/',views.GetAllShowsbyYourChoice.as_view(),name='showbychoice'),
+    path('seatofshow/<int:id>/',views.GetSeatofshow.as_view(),name='seatofshow'),
+    path('bookedseatofshow/<int:id>/',views.BookedSeatofshow.as_view(),name='bookedseatofshow'),
+    path('availableseatofshow/<int:id>/',views.AvailableSeatofshow.as_view(),name='availableseatofshow'),
+
+    path('bookticket/',views.BookTicket.as_view(),name='bookticket'),
 
 ]

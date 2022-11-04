@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,BaseUserManager,PermissionsMixin
 from admin_api . models import District,City
+from vendor_api . models import Screen,Show,Seat
 # Create your models here.
 
 class myAccountManager(BaseUserManager):
@@ -82,3 +83,13 @@ class UserToken(models.Model):
     token = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     expired_at = models.DateTimeField()
+
+class BokkingTicket(models.Model):
+    price = models.FloatField(default=0)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    show = models.ForeignKey(Show,on_delete=models.CASCADE)
+    screen = models.ForeignKey(Screen,on_delete=models.CASCADE)
+    seat_no = models.ManyToManyField(Seat)
+
+    def __str__(self):
+        return str(self.id)+ str(self.seat_no)
