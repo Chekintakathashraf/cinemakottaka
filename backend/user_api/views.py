@@ -11,7 +11,7 @@ from .verify import send,check
 from admin_api . models import Category,City,District,Movie
 from admin_api . serializers import CategorySerializer,DistrictSerializer,CitySerializer,MovieSerializer,UpdateUserSerializer
 
-from vendor_api . models import Show,ShowDate,ShowTime,Vendor,Seat
+from vendor_api . models import Show,ShowDate,ShowTime,Vendor,Seat,Screen
 from vendor_api . serializers import ShowSerializer,ShowDateSerializer,ShowTimeSerializer,VendorSerializer,SeatSerializer
 
 import requests
@@ -507,6 +507,78 @@ class AvailableSeatofshow(APIView):
             return Response('no seats are available')
 
 
+# class BookTicket(APIView):
+#     authentication_classes = [JWTUserAuthentication]
+#     serializer_classes = BookingTicketSerializer
+#     def post(self,request):
+#         data = request.data
+#         # request.data._mutable=True
+#         userr=request.user
+#         print(userr)
+#         id=User.objects.get(username=userr).id
+#         data['user']=id
+#         data.update(request.data)
+#         print(data)
+#         print('-----------------------------------------------------------------')
+
+        
+#         print(data['seat_no'])
+#         print(type(data['seat_no']))
+#         for i in data['seat_no']:
+#             id=i
+#             print('========')
+#             print(id)
+#             seat=Seat.objects.get(id=id)
+#             print(seat.booked_status)
+#             if seat.booked_status==True:
+#                 responce={
+#                     'message': 'The seat is booked by another user',
+#                     'seat_no': i
+#                 }
+#                 return Response(responce,status=status.HTTP_404_NOT_FOUND)
+#         print('^^^^^^^^^^^^^^^^^^^')
+
+#         # request.data._mutable=True
+#         # userr=request.user
+#         # print(userr)
+#         # id=User.objects.get(username=userr).id
+#         # data['user']=id
+#         # data.update(request.data)
+
+#         screeeee=data['screen']
+#         print(screeeee)
+#         screen=Screen.objects.get(id=screeeee)
+#         print(screen.price)
+#         priceperticket=screen.price
+#         print(len(data['seat_no']))
+#         ticketprice=priceperticket*len(data['seat_no'])
+#         data['price']=ticketprice
+#         data.update(request.data)
+#         print(data)
+
+#         print('----------0000000000000000----------------')
+#         print(data)
+#         print(type(data))
+#         print('----------0000000000000000----------------')
+#         serializer = self.serializer_classes(data=data)
+#         if serializer.is_valid():
+#             serializer.save()
+            
+#             print(serializer.data)
+#             print('********************')
+#             for i in serializer.data['seat_no']:
+#                 seat=Seat.objects.get(id=i)
+#                 seat.booked_status=True
+#                 print(seat.booked_status)
+#                 print('-------------')
+#                 seat.save()
+            
+#             return Response(serializer.data)
+#         else:
+#         #     print(serializer.errors)
+#             return Response(serializer.errors)
+
+
 class BookTicket(APIView):
     authentication_classes = [JWTUserAuthentication]
     serializer_classes = BookingTicketSerializer
@@ -544,24 +616,53 @@ class BookTicket(APIView):
         # id=User.objects.get(username=userr).id
         # data['user']=id
         # data.update(request.data)
+
+        screeeee=data['screen']
+        print(screeeee)
+        screen=Screen.objects.get(id=screeeee)
+        print(screen.price)
+        priceperticket=screen.price
+        print(len(data['seat_no']))
+        ticketprice=priceperticket*len(data['seat_no'])
+
+        brokercharger=ticketprice*5/100
+        grandtotal=ticketprice+brokercharger
+        print('-----------------')
+
+        print(brokercharger)
+        print(grandtotal)
+
+
+        data['price']=grandtotal
+        data.update(request.data)
+        print(data)
+
         print('----------0000000000000000----------------')
         print(data)
         print(type(data))
         print('----------0000000000000000----------------')
+        
         serializer = self.serializer_classes(data=data)
         if serializer.is_valid():
             serializer.save()
             
             print(serializer.data)
             print('********************')
-            for i in serializer.data['seat_no']:
-                seat=Seat.objects.get(id=i)
-                seat.booked_status=True
-                print(seat.booked_status)
-                print('-------------')
-                seat.save()
-            
-            return Response(serializer.data)
+            # for i in serializer.data['seat_no']:
+            #     seat=Seat.objects.get(id=i)
+            #     seat.booked_status=True
+            #     print(seat.booked_status)
+            #     print('-------------')
+            #     seat.save()
+            response={
+                'data':serializer.data,
+                "brokercharge":brokercharger,
+                'ticketpriceperseat':priceperticket,
+                'totalticketprice':ticketprice,
+                'grandtotal':grandtotal
+
+            }
+            return Response(response)
         else:
         #     print(serializer.errors)
             return Response(serializer.errors)

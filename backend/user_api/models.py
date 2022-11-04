@@ -90,6 +90,7 @@ class BokkingTicket(models.Model):
     show = models.ForeignKey(Show,on_delete=models.CASCADE)
     screen = models.ForeignKey(Screen,on_delete=models.CASCADE)
     seat_no = models.ManyToManyField(Seat)
+    is_paid = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id)+ str(self.seat_no)

@@ -36,6 +36,7 @@ class Screen(models.Model):
     screen_name = models.CharField(max_length=20)
     vendor = models.ForeignKey(Vendor,on_delete=models.CASCADE,null=True) 
     total_seet = models.IntegerField()
+    price=models.IntegerField(default=0)
 
     def __str__(self):
         return self.screen_name
