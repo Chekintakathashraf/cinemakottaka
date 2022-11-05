@@ -98,7 +98,7 @@ class BokkingTicket(models.Model):
 
 class BrokerCharge(models.Model):
     # ticket = models.ForeignKey(BokkingTicket, on_delete=models.CASCADE)
-    ticket= models.IntegerField()
+    ticket= models.IntegerField(unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
     show = models.ForeignKey(Show, on_delete=models.CASCADE)
