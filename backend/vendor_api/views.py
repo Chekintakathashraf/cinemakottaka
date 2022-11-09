@@ -115,7 +115,7 @@ class VendorRegister(APIView):
                 
                 send_mail('Hello  ',
                 'Thank You For Registering on CINEMA KOTTAKA ,Your Vendor Application is underprocess ',
-                'ashrafchekintakath@gmail.com'
+                'enteprojectemail@gmail.com'
                 ,[mailingemail]   
                 ,fail_silently=False)
 
