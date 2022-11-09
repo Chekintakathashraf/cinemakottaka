@@ -92,6 +92,7 @@ class BokkingTicket(models.Model):
     screen = models.ForeignKey(Screen,on_delete=models.CASCADE)
     seat_no = models.ManyToManyField(Seat)
     is_paid = models.BooleanField(default=False)
+    payment_id = models.CharField(max_length=255,null=True)
 
     def __str__(self):
         return str(self.id)+ str(self.seat_no)
@@ -104,6 +105,7 @@ class BrokerCharge(models.Model):
     show = models.ForeignKey(Show, on_delete=models.CASCADE)
     # brokerfee = models.ForeignKey(BokkingTicket,on_delete=models.CASCADE,null=True)
     brokerfee = models.FloatField(default=0)
+    payment_id = models.CharField(max_length=255,null=True)
 
     def __str__(self):
         return str(Screen)

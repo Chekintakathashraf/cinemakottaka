@@ -24,6 +24,8 @@ from . authentication import JWTUserAuthentication,create_access_token,create_re
 from . models import UserToken
 from rest_framework import exceptions
 
+import razorpay
+
 class UserRegister(APIView):
     permission_classes=[AllowAny]
     serializer_classes = UserSerializer
@@ -711,3 +713,97 @@ class Payment(APIView):
                 return Response(serializer.errors)
         except:
             return Response('amount already paid')
+
+
+def temp_payment(request):
+    print('***********111***********')
+    payment =0
+    ticket=0
+    if request.method == 'POST':
+        print('**********222************')
+        amount = request.POST.get('amount')
+        print('***********333***********',amount)
+        id = request.POST['ticketid']
+        print('***********444***********',id)
+        request.session['key'] = id
+        print(id)
+
+        client =razorpay.Client(auth=(settings.RAZORPAY_PUBLIC_KEY,settings.RAZORPAY__SECRET_KEY))
+        print('***********555***********',client)
+        payment = client.order.create({"amount": int(amount) * 100, 
+                                   "currency": "INR", 
+                                   "payment_capture": "1"})
+        print('*********666*************',payment)
+      
+        
+        # payment['id']=id  
+        print('{{{{{{{{{{{')
+        print(payment['id'])
+        # request.session['key'] =payment['id']
+        print('????????????????????')
+        ticket=BokkingTicket.objects.get(id=id)
+        print(ticket)                                          
+
+    return render(request,'payments.html',{'payment':payment,'ticket':ticket})
+
+def paymentstatus(request):
+    status =None
+    response = request.POST
+    # id = request.data['id']
+    # print(id)
+
+    print("ddd",response)
+
+    params_dict = {
+        'razorpay_order_id':response['razorpay_order_id'],
+        'razorpay_payment_id':response['razorpay_payment_id'],
+        'razorpay_signature':response['razorpay_signature']
+    }
+    print('-------111-------',params_dict)
+    client =razorpay.Client(auth=(settings.RAZORPAY_PUBLIC_KEY,settings.RAZORPAY__SECRET_KEY))
+    print('------2222--------',client)
+   
+    status = client.utility.verify_payment_signature(params_dict)
+    print(status,'ghg')
+    try:
+        print('\\\\\\\\\\\\\\\\\\\\\\\\\\')
+        id=request.session['key']
+        ticket=BokkingTicket.objects.get(id=id)
+        print(ticket) 
+        ticket.payment_id  = response['razorpay_payment_id']
+        ticket.save()
+            
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        print(ticket)
+        print(ticket.id,'------------')
+        print(ticket.seat_no)
+        print('------')
+        serializer = BookingTicketSerializer(ticket,partial = True)   
+        print('------')
+        print(serializer.data)
+        print('---------')
+        
+        for i in serializer.data['seat_no']:
+            seat=Seat.objects.get(id=i)
+            seat.booked_status=True
+            print(seat.booked_status)
+            print('-------------')
+            seat.save()
+        # for i in ticket.seat_no:
+        #     seat=Seat.objects.get(id=i)
+        #     seat.booked_status=True
+        #     print(seat.booked_status)
+        #     print('-------------')
+        #     seat.save()
+        
+        ticket.is_paid=True
+        ticket.save()
+
+        id = request.session['key']
+        ticket=BokkingTicket.objects.get(id=id)
+
+        print(ticket)
+        
+        return render(request,'success.html',{'status':True})
+    except:
+        return render(request,'success.html',{'status':False})

@@ -32,4 +32,7 @@ urlpatterns = [
     path('bookticket/',views.BookTicket.as_view(),name='bookticket'),
     path('payment/<int:id>/',views.Payment.as_view(),name='payment'),
 
+    path('payz/', views.temp_payment, name="payy"),
+    path('statusz/', views.paymentstatus, name="status"),
+
 ]
