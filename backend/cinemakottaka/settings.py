@@ -56,6 +56,10 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.facebook',
 
 
+    # 'django_celery_results',
+    # 'django_celery_beat',
+
+
 ]
 
 MIDDLEWARE = [
@@ -187,3 +191,14 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
 
 API_KEY=config('API_KEY')
+
+# CELERY SETTINGS
+
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Kolkata'
+
+# CELERY_RESULT_BACKEND = 'django-db'

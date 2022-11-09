@@ -20,6 +20,8 @@ from django.conf import settings
 
 from user_api . models import BokkingTicket,BrokerCharge
 from user_api . serializers import BookingTicketSerializer,BrokerChargeSerializer
+
+from admin_api.task import send_moviemail_func
 # Create your views here.
 
 
@@ -357,6 +359,10 @@ class AddMoviesView(APIView):
         serializer = MovieSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
+            print(serializer.data['movie_name'])
+            moviename=serializer.data['movie_name']
+            
+            send_moviemail_func.delay()
             return Response(serializer.data)
         else:
             print(serializer.errors)
