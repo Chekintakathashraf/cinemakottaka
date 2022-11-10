@@ -6,6 +6,8 @@ urlpatterns = [
     path('blockvendor/<int:id>/',views.BlockVendor.as_view(),name='blockvendor'),
     path('getvendordetails/<int:id>/',views.GetVendorDetailsView.as_view(),name='getvendordetails'),
     path('getvendors/',views.GetVendorsView.as_view(),name='getvendorss'),
+    path('getvendorsbydistrict/<int:id>/',views.GetVendorsByDistrictView.as_view(),name='getvendorsbydistrict'),
+    path('getvendorsbycity/<int:id>/',views.GetVendorsByCityView.as_view(),name='getvendorsbycity'),
 
     
     path('blockuser/<int:id>/',views.BlockUser.as_view(),name='blockuser'),
@@ -39,5 +41,8 @@ urlpatterns = [
     
     path('getbookingdetails/',views.GetAllBookedDetails.as_view(),name='getbookingdetails'),
     path('getbrokerchargedetails/',views.GetAllBrokerCharge.as_view(),name='getbrokerchargedetails'),
+
+    path('getallpaidticket/',views.AllPaidTicket.as_view(),name='getallpaidticket'),
+    path('getallpendingticket/',views.AllPendingTicket.as_view(),name='getallpendingticket'),
     
 ]

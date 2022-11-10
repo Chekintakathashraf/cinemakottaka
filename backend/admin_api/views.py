@@ -138,8 +138,10 @@ class GetVendorDetailsView(APIView):
             serializer = VendorSerializer(vendor,many=False)   
             return Response(serializer.data)
         except:
-            message = {'message':'No User with this id already exist'}
+            message = {'message':'No Vendor with this id exist'}
             return Response(message)
+
+    
 
 class GetVendorsView(APIView):
     permission_classes=[IsAdminUser]
@@ -148,6 +150,27 @@ class GetVendorsView(APIView):
     def get(self, request):
     
         vendors = Vendor.objects.all()
+        serializer = VendorSerializer(vendors,many=True)   
+        return Response(serializer.data)
+
+
+class GetVendorsByDistrictView(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    serializer_classes = VendorSerializer
+    def get(self, request,id):
+    
+        vendors = Vendor.objects.filter(district=id)
+        serializer = VendorSerializer(vendors,many=True)   
+        return Response(serializer.data)
+
+class GetVendorsByCityView(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    serializer_classes = VendorSerializer
+    def get(self, request,id):
+    
+        vendors = Vendor.objects.filter(city=id)
         serializer = VendorSerializer(vendors,many=True)   
         return Response(serializer.data)
 
@@ -518,4 +541,25 @@ class GetAllBrokerCharge(APIView):
         ticket = BrokerCharge.objects.all()
         serializer =BrokerChargeSerializer(ticket,many=True)
          
+        return Response(serializer.data)
+
+
+class AllPaidTicket(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    serializer_classes = VendorSerializer
+    def get(self, request):
+    
+        ticket = BokkingTicket.objects.filter(is_paid=True)
+        serializer = BookingTicketSerializer(ticket,many=True)   
+        return Response(serializer.data)
+
+class AllPendingTicket(APIView):
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
+    serializer_classes = VendorSerializer
+    def get(self, request):
+    
+        ticket = BokkingTicket.objects.filter(is_paid=False)
+        serializer = BookingTicketSerializer(ticket,many=True)   
         return Response(serializer.data)
