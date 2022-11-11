@@ -801,20 +801,20 @@ class AddSeat(APIView):
                 
                     }
 
-            return Response(response)
-            response={
+                    return Response(response)
+            responses={
                 "messages" : 'seat added',
                 
             }
 
-            return Response(response)
+            return Response(responses)
         else:
-            response={
+            responsess={
                 "messages" : 'You are not supposed to take this action',
                 
             }
 
-            return Response(response,status=status.HTTP_400_BAD_REQUEST)
+            return Response(responsess,status=status.HTTP_400_BAD_REQUEST)
 
 class Bookedseatbyshow(APIView):
     authentication_classes = [JWTVendorAuthentication]
