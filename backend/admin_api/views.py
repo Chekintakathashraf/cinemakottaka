@@ -30,6 +30,9 @@ class VerifyVendor(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def patch(self, request,id):
+
+        """required field : vendor id"""
+        
         
         details = Vendor.objects.get(id=id)
         details.is_active=True
@@ -63,6 +66,10 @@ class BlockVendor(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def patch(self, request,id):
+
+        """required field : vendor id"""
+
+
         details = Vendor.objects.get(id=id)
         print('-------111111111-------------')
         if details.is_Vendor==True:
@@ -89,6 +96,10 @@ class BlockUser(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def patch(self, request,id):
+
+        """required field : user id""" 
+
+
         details = User.objects.get(id=id)
         if details.is_active==True:
             details.is_active=False
@@ -110,6 +121,10 @@ class GetUserDetailsView(APIView):
     authentication_classes = [JWTUserAuthentication]
     serializer_classes = UserSerializer
     def get(self, request,id):
+
+        """required field : user id"""
+
+
         try:
             user = User.objects.get(id=id)
             serializer = UserSerializer(user,many=False)   
@@ -133,6 +148,9 @@ class GetVendorDetailsView(APIView):
     authentication_classes = [JWTUserAuthentication]
     serializer_classes = UserSerializer
     def get(self, request,id):
+
+        """required field : vendor id"""
+
         try:
             vendor = Vendor.objects.get(id=id)
             serializer = VendorSerializer(vendor,many=False)   
@@ -159,6 +177,8 @@ class GetVendorsByDistrictView(APIView):
     authentication_classes = [JWTUserAuthentication]
     serializer_classes = VendorSerializer
     def get(self, request,id):
+
+        """required field : district id"""
     
         vendors = Vendor.objects.filter(district=id)
         serializer = VendorSerializer(vendors,many=True)   
@@ -170,6 +190,9 @@ class GetVendorsByCityView(APIView):
     serializer_classes = VendorSerializer
     def get(self, request,id):
     
+        """required field : city id"""
+
+
         vendors = Vendor.objects.filter(city=id)
         serializer = VendorSerializer(vendors,many=True)   
         return Response(serializer.data)
@@ -179,6 +202,9 @@ class AddDistrictView(APIView):
     authentication_classes = [JWTUserAuthentication]
     serializer_classes = DistrictSerializer
     def post(self,request):
+
+        """required field : district-string """
+
         data = request.data
         serializer = self.serializer_classes(data=data)
         if serializer.is_valid():
@@ -199,6 +225,10 @@ class AddCityView(APIView):
     authentication_classes = [JWTUserAuthentication]
     serializer_classes = CitySerializer
     def post(self,request):
+
+        """required field : district-id, city-string"""
+
+
         data = request.data
         serializer = self.serializer_classes(data=data)
         if serializer.is_valid():
@@ -218,10 +248,17 @@ class UpdateDistrictView(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def get(self, request,id):
+
+        """required field : district id"""
+
+
         details = District.objects.get(id=id)
         serializer = DistrictSerializer(details,context={'request': request})
         return Response(serializer.data)
     def put(self, request,id):
+
+        """required field : district id"""
+
         print(request.body)
         details = District.objects.get(id=id)
         serializer = DistrictSerializer(details,data=request.data,)
@@ -234,10 +271,16 @@ class UpdateDistrictView(APIView):
             print("Update district failed")
             return Response(serializer.errors)    
     def delete(self, request,id):
+
+        """required field : district id"""
+
         details = District.objects.get(id=id)
         details.delete()
         return Response({'message':'District deleted'})
     def patch(self, request,id):
+
+        """required field : district id"""
+
         details = District.objects.get(id=id)
         serializer = DistrictSerializer(details,data=request.data,partial = True)
         if serializer.is_valid():
@@ -254,10 +297,17 @@ class UpdateCityView(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def get(self, request,id):
+
+        """required field : city id"""
+
         details = City.objects.get(id=id)
         serializer = CitySerializer(details,context={'request': request})
         return Response(serializer.data)
     def put(self, request,id):
+
+        """required field : city id"""
+
+
         print(request.body)
         details = City.objects.get(id=id)
         serializer = CitySerializer(details,data=request.data,)
@@ -270,10 +320,17 @@ class UpdateCityView(APIView):
             print("Update city failed")
             return Response(serializer.errors)    
     def delete(self, request,id):
+
+        """required field : city id"""
+
         details = City.objects.get(id=id)
         details.delete()
         return Response({'message':'City deleted'})
     def patch(self, request,id):
+
+        """required field : city id"""
+
+
         details = City.objects.get(id=id)
         serializer = CitySerializer(details,data=request.data,partial = True)
         if serializer.is_valid():
@@ -326,6 +383,8 @@ class ApproveCityenqueryView(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def patch(self, request,id):
+
+        """required field : cityenquery id"""
         
         cities = Cityenquery.objects.get(id=id)
         cities.is_approved=True
@@ -361,6 +420,7 @@ class AddCategoryView(APIView):
     authentication_classes = [JWTUserAuthentication]
 
     def post(self, request):
+        """ required field : category_name - string"""
         data = request.data
         request.data._mutable=True
         data['slug']=slugify(data['category_name'])
@@ -379,6 +439,9 @@ class AddMoviesView(APIView):
     authentication_classes = [JWTUserAuthentication]
 
     def post(self, request):
+
+        """ required field : movie_name - string, category_name - id, tmdb_id - string"""
+
         serializer = MovieSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -395,6 +458,9 @@ class BlockMovie(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def patch(self, request,id):
+
+        """ required field : movie id"""
+
         movie = Movie.objects.get(id=id)
         if movie.is_active==True:
             movie.is_active=False
@@ -415,6 +481,9 @@ class UpdateMovie(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def patch(self, request,id):
+
+        """ required field : movie id"""
+
         movie = Movie.objects.get(id=id)
         serializer = MovieSerializer(movie,data=request.data,partial = True)
         if serializer.is_valid():
@@ -426,10 +495,17 @@ class UpdateMovie(APIView):
             print(serializer.errors)
             return Response(serializer.errors)
     def delete(self, request,id):
+
+        """ required field : movie id"""
+
         details = Movie.objects.get(id=id)
         details.delete()
         return Response({'message':'Movie deleted'})
     def put(self, request,id):
+
+        """ required field : movie id"""
+
+
         movie = Movie.objects.get(id=id)
         serializer = MovieSerializer(movie,data=request.data)
         if serializer.is_valid():
@@ -489,6 +565,8 @@ class TMDBMovieDetails(APIView):
         authentication_classes = [JWTUserAuthentication]
 
         def get(self,request,id):
+            """ required field : movie id"""
+
             print('************************************')
             movie=Movie.objects.get(id=id)
             print(movie)
@@ -514,6 +592,8 @@ class GetAllMovieByLanguage(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def get(self, request,id):
+
+        """ required field : category id"""
 
         
         movie = Movie.objects.filter(category_name=id)

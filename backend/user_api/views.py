@@ -31,6 +31,9 @@ class UserRegister(APIView):
     serializer_classes = UserSerializer
     
     def post(self, request):
+
+        """ required field : username-string, email-email, phone_number-10 digit number, password - string"""
+
         print('------------------------------------------')
         print(request)
         print('------------------------------------------')
@@ -55,6 +58,9 @@ class UserRegister(APIView):
 
 class VerifyUserOtp(APIView):
     def post(self,request):
+
+        """ required field : phone_number-10 digit number, code - string"""
+
         try:
             data=request.data
             phone_number=data['phone_number']
@@ -77,6 +83,9 @@ class VerifyUserOtp(APIView):
 
 class LoginUserAPIView(APIView):
     def post(self, request):
+
+        """ required field : phone_number-10 digit number, password - string"""
+
         phone_number = request.data['phone_number']
         password = request.data['password']
 
@@ -130,6 +139,8 @@ class LoginUserAPIView(APIView):
 
 class RefreshUserAPIView(APIView):
     def post(self, request):
+
+
         refresh_token = request.COOKIES.get('refresh_token')
         id = decode_refresh_token(refresh_token)
         print(refresh_token)
@@ -152,6 +163,7 @@ class RefreshUserAPIView(APIView):
 class UserAPIView(APIView):
     authentication_classes = [JWTUserAuthentication]
     def get(self,request):
+
         return Response(UserSerializer(request.user).data)
 
 
@@ -176,6 +188,8 @@ class LogoutUserAPIView(APIView):
 
 class LoginUserWithOtpAPIView(APIView):
     def post(self, request):
+        """ required field : phone_number-10 digit number """
+
         phone_number = request.data['phone_number']
 
         user = User.objects.filter(phone_number=phone_number).first()
@@ -208,6 +222,10 @@ class LoginUserWithOtpAPIView(APIView):
 
 class VerifyLoginUserOtp(APIView):
     def post(self,request):
+
+        """ required field : code - string"""
+
+
         try:
             data=request.data
             print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
@@ -268,6 +286,8 @@ class GetDistrictsView(APIView):
 class GetCityByDistrictView(APIView):
     authentication_classes = [JWTUserAuthentication]
     def get(self, request,id):
+
+        """ required field : district id"""
     
         city = City.objects.filter(district=id)
         serializer = CitySerializer(city,many=True)   
@@ -276,6 +296,9 @@ class GetCityByDistrictView(APIView):
 class SelectlocationView(APIView):
     authentication_classes = [JWTUserAuthentication]
     def patch(self, request):
+
+        """ required field : district-district id, city - city id"""
+
         user=request.user
         data=request.data
         print(user)
@@ -326,6 +349,10 @@ class AllMovieCategory(APIView):
 class AllMovieDetailsByLanguage(APIView):
     authentication_classes = [JWTUserAuthentication]
     def get(self, request,id):
+
+        """ required field : language category id """
+
+
         userr=request.user
         print(userr)
         print(userr.city)
@@ -343,6 +370,9 @@ class TMDBMovieDetails(APIView):
         authentication_classes = [JWTUserAuthentication]
 
         def get(self,request,id):
+
+            """ required field : movie id """
+
             print('************************************')
             movie=Movie.objects.get(id=id)
             print(movie)
@@ -358,6 +388,9 @@ class TMDBMovieDetails(APIView):
 class Theaterofthatmovie(APIView):
     authentication_classes = [JWTUserAuthentication]
     def get(self, request,id):
+
+        """ required field : movie id """
+
         userr=request.user
         print(userr)
         print(userr.city)
@@ -428,6 +461,10 @@ class GetAllTimeDate(APIView):
 class GetAllShowsbyYourChoice(APIView):
     authentication_classes = [JWTUserAuthentication]
     def get(self, request,date,time,vendor,movie):
+
+        """ required field : date id,time id,vendor id, movie id """
+
+
         print('******000000')
         userr=request.user
         show = Show.objects.filter(date=date,time=time,vendor=vendor,movie=movie,is_active=True)
@@ -457,6 +494,7 @@ class GetSeatofshow(APIView):
     authentication_classes = [JWTUserAuthentication]
     def get(self, request,id):
 
+        """ required field : show id """
         
         seat = Seat.objects.filter(show=id)
         if seat:
@@ -470,6 +508,7 @@ class BookedSeatofshow(APIView):
     authentication_classes = [JWTUserAuthentication]
     def get(self, request,id):
 
+        """ required field : show id """
         
         seat = Seat.objects.filter(show=id,booked_status=True)
         if seat:
@@ -491,6 +530,7 @@ class AvailableSeatofshow(APIView):
     authentication_classes = [JWTUserAuthentication]
     def get(self, request,id):
 
+        """ required field : show id """
         
         seat = Seat.objects.filter(show=id,booked_status=False)
         if seat:
@@ -585,6 +625,10 @@ class BookTicket(APIView):
     authentication_classes = [JWTUserAuthentication]
     serializer_classes = BookingTicketSerializer
     def post(self,request):
+
+        """ required field : show - show id, screen - screen id, seat_no - list of seat id """
+
+
         data = request.data
         # request.data._mutable=True
         userr=request.user
@@ -674,6 +718,9 @@ class BookTicket(APIView):
 class Payment(APIView):
     authentication_classes = [JWTUserAuthentication]
     def patch(self, request,id):
+
+        """ required field : ticket id """
+
         try:
             user=request.user
             data=request.data

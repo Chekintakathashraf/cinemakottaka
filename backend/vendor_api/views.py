@@ -64,6 +64,9 @@ class VendorRegister(APIView):
     
     
     def post(self, request):
+
+        """ required field : first_name - string, last_name - string, email-email, phone_number - 10 digit number, password - string, district - district id, city - city id or else other & cityenqueryname - string """
+
         data = request.data
         
 
@@ -132,6 +135,9 @@ class VendorRegister(APIView):
 
 class LoginVendorAPIView(APIView):
     def post(self, request):
+
+        """ required field : email - email, password - string"""
+
         email = request.data['email']
         givenpassword = request.data['password']
         print('*****************************')
@@ -251,7 +257,7 @@ class VendorAPIView(APIView):
 class AddShowTime(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def post(self,request):
-        
+        """required field : date - year-month-day """
         data = request.data
         serializer = ShowTimeSerializer(data=data)
         if serializer.is_valid():
@@ -272,6 +278,7 @@ class AddShowTime(APIView):
 class AddShowDate(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def post(self,request):
+        """required field : time - hour:minute:second"""
         
         data = request.data
         serializer = ShowDateSerializer(data=data)
@@ -291,6 +298,7 @@ class AddShowDate(APIView):
 class AddScreen(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def post(self,request):
+        """required field : screen_name - string, total_seet - number, price- number"""
         
         data = request.data
         request.data._mutable=True
@@ -318,6 +326,8 @@ class UpdateScreen(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def patch(self, request,id):
         
+        """required field : screen id"""
+
         data = request.data
         request.data._mutable=True
         vendor=request.user
@@ -371,6 +381,7 @@ class UpdateScreen(APIView):
     #         return Response(response,status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request,id):
+        """required field : screen id"""
         data = request.data
         request.data._mutable=True
         vendor=request.user
@@ -412,6 +423,7 @@ class GetAllScreen(APIView):
 class GetAllScreenByMovie(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def get(self, request,id):
+        """required field : movie id """
 
         vendor=request.user
         show=Show.objects.filter(vendor=vendor.id,movie=id)
@@ -438,6 +450,8 @@ class GetAllScreenByShow(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def get(self, request,id):
 
+        """required field : show id"""
+
         vendor=request.user
            
         show = Show.objects.filter(vendor=vendor.id,id=id)
@@ -459,6 +473,8 @@ class GetAllScreenByShow(APIView):
 class AddShow(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def post(self,request):
+
+        """required field : movie - movie id , screen - creen id, date- date id, time - time id"""
         
         data = request.data
         request.data._mutable=True
@@ -590,6 +606,9 @@ class AddShow(APIView):
 class BlockShow(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def patch(self, request,id):
+
+        """required field : show id"""
+
         show = Show.objects.get(id=id)
         print(show.vendor)
         vendor=request.user
@@ -620,6 +639,7 @@ class BlockShow(APIView):
 class GetAllShows(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def get(self, request):
+
 
         vendor=request.user
         show = Show.objects.filter(vendor=vendor.id)
@@ -653,6 +673,9 @@ class GetAllShowsByMovie(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def get(self, request,id):
 
+        """required field : movie id"""
+        
+
         vendor=request.user
         show = Show.objects.filter(vendor=vendor.id,movie=id)
         serializer =ShowSerializer(show,many=True)   
@@ -661,6 +684,8 @@ class GetAllShowsByMovie(APIView):
 class GetAllShowsByScreen(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def get(self, request,id):
+
+        """required field : screen id"""
 
         vendor=request.user
         show = Show.objects.filter(vendor=vendor.id,screen=id)
@@ -672,6 +697,8 @@ class GetAllShowsByLanguage(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def get(self, request,id):
 
+        """required field : category id"""
+
         vendor=request.user
         show = Show.objects.filter(vendor=vendor.id,category_name=id)
         serializer =ShowSerializer(show,many=True)
@@ -681,6 +708,8 @@ class GetAllShowsByLanguage(APIView):
 class GetAllShowsByTime(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def get(self, request,id):
+
+        """required field : time id"""
 
         vendor=request.user
         show = Show.objects.filter(vendor=vendor.id,time=id)
@@ -692,6 +721,7 @@ class GetAllShowsByDate(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def get(self, request,id):
 
+        """required field : date id"""
         vendor=request.user
         show = Show.objects.filter(vendor=vendor.id,date=id)
         serializer =ShowSerializer(show,many=True)
@@ -755,6 +785,8 @@ class AddSeat(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def post(self,request):
         
+        """required field : seet_no-1, show-show id, screen-screen id"""
+
         data = request.data
         request.data._mutable=True
         vendor=request.user
@@ -820,6 +852,9 @@ class Bookedseatbyshow(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def get(self, request,id):
 
+        """required field : show id"""
+        
+
         vendor=request.user
         show  = Show.objects.get(id=id)
         if show.vendor==vendor:
@@ -843,6 +878,8 @@ class Bookedseatbyshow(APIView):
 class UnBookedseatbyshow(APIView):
     authentication_classes = [JWTVendorAuthentication]
     def get(self, request,id):
+
+        """required field : show id"""
 
         vendor=request.user
         show  = Show.objects.get(id=id)

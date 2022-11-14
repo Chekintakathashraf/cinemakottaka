@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     #'allauth.socialaccount.providers.facebook',
 
+    'rest_framework_swagger',
 
     # 'django_celery_results',
     # 'django_celery_beat',
@@ -90,6 +91,10 @@ TEMPLATES = [
                 #all auth
                 'django.template.context_processors.request',
             ],
+            #swagger
+            'libraries' : {
+                'staticfiles': 'django.templatetags.static', 
+            }
         },
     },
 ]
@@ -206,3 +211,5 @@ CELERY_TIMEZONE = 'Asia/Kolkata'
 
 RAZORPAY_PUBLIC_KEY = config('RAZORPAY_PUBLIC_KEY')
 RAZORPAY__SECRET_KEY = config('RAZORPAY__SECRET_KEY')
+
+REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }
