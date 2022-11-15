@@ -33,4 +33,4 @@ urlpatterns = [
     path('accounts/', include('allauth.urls' )),
 
     path('documentation/',schema_view),
-]+ static(settings.MEDIA_URL,document_root= settings.MEDIA_ROOT)
+]+ static(settings.STATIC_URL,document_root= settings.MEDIA_ROOT)
