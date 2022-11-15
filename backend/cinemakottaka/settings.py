@@ -229,6 +229,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Asia/Kolkata'
 
 # CELERY_RESULT_BACKEND = 'django-db'
+# 'sample'
 
 
 RAZORPAY_PUBLIC_KEY = config('RAZORPAY_PUBLIC_KEY')
