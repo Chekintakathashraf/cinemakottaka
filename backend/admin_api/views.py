@@ -17,6 +17,8 @@ from django.template.defaultfilters import slugify
 import requests
 from django.conf import settings
 
+from rest_framework import status
+
 
 from user_api . models import BokkingTicket,BrokerCharge
 from user_api . serializers import BookingTicketSerializer,BrokerChargeSerializer
@@ -32,35 +34,38 @@ class VerifyVendor(APIView):
     def patch(self, request,id):
 
         """required field : vendor id"""
+        try:
         
-        
-        details = Vendor.objects.get(id=id)
-        details.is_active=True
-        print(details.is_active)
-        serializer = UpdateVendorSerializer(details,data=request.data,partial = True)
-        if serializer.is_valid():
-            serializer.save()
+            details = Vendor.objects.get(id=id)
+            details.is_active=True
+            print(details.is_active)
+            serializer = UpdateVendorSerializer(details,data=request.data,partial = True)
+            if serializer.is_valid():
+                serializer.save()
 
-            print('-------------------')
-            print(details.email)
-            print('---------------')
+                print('-------------------')
+                print(details.email)
+                print('---------------')
 
-            mailingemail= details.email
-            print(mailingemail)
-            
-            send_mail('Hello  ',
-            'Congratulations, your Vender application is approved.',
-            'ashrafchekintakath@gmail.com'
-            ,[mailingemail]   
-            ,fail_silently=False)
+                mailingemail= details.email
+                print(mailingemail)
+                
+                send_mail('Hello  ',
+                'Congratulations, your Vender application is approved.',
+                'ashrafchekintakath@gmail.com'
+                ,[mailingemail]   
+                ,fail_silently=False)
 
 
-            print("Vendor verified Successfully")
-            return Response(serializer.data)
-        else:
-            print("Vendor verification failed")
-            print(serializer.errors)
-            return Response(serializer.errors)
+                print("Vendor verified Successfully")
+                return Response(serializer.data)
+            else:
+                print("Vendor verification failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class BlockVendor(APIView):
     permission_classes=[IsAdminUser]
@@ -68,29 +73,32 @@ class BlockVendor(APIView):
     def patch(self, request,id):
 
         """required field : vendor id"""
+        try:
 
-
-        details = Vendor.objects.get(id=id)
-        print('-------111111111-------------')
-        if details.is_Vendor==True:
-            print('-------222222-------------')
-            details.is_active=False
-            details.is_Vendor=False
-        else:
-            print('-------333333-------------')
-            details.is_Vendor=True
-        print(details.is_active)
-        print('-------4444444444-------------')
-        serializer = UpdateVendorSerializer(details,data=request.data,partial = True)
-        if serializer.is_valid():
-            print('-------5555555-------------')
-            serializer.save()
-            print("Vendor action Successfully")
-            return Response(serializer.data)
-        else:
-            print("Vendor action failed")
-            print(serializer.errors)
-            return Response(serializer.errors)
+            details = Vendor.objects.get(id=id)
+            print('-------111111111-------------')
+            if details.is_Vendor==True:
+                print('-------222222-------------')
+                details.is_active=False
+                details.is_Vendor=False
+            else:
+                print('-------333333-------------')
+                details.is_Vendor=True
+            print(details.is_active)
+            print('-------4444444444-------------')
+            serializer = UpdateVendorSerializer(details,data=request.data,partial = True)
+            if serializer.is_valid():
+                print('-------5555555-------------')
+                serializer.save()
+                print("Vendor action Successfully")
+                return Response(serializer.data)
+            else:
+                print("Vendor action failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class BlockUser(APIView):
     permission_classes=[IsAdminUser]
@@ -99,22 +107,25 @@ class BlockUser(APIView):
 
         """required field : user id""" 
 
-
-        details = User.objects.get(id=id)
-        if details.is_active==True:
-            details.is_active=False
-        else:
-            details.is_active=True
-        print(details.is_active)
-        serializer = UpdateUserSerializer(details,data=request.data,partial = True)
-        if serializer.is_valid():
-            serializer.save()
-            print("vender action Successfully")
-            return Response(serializer.data)
-        else:
-            print("Vendor action failed")
-            print(serializer.errors)
-            return Response(serializer.errors)
+        try:
+            details = User.objects.get(id=id)
+            if details.is_active==True:
+                details.is_active=False
+            else:
+                details.is_active=True
+            print(details.is_active)
+            serializer = UpdateUserSerializer(details,data=request.data,partial = True)
+            if serializer.is_valid():
+                serializer.save()
+                print("vender action Successfully")
+                return Response(serializer.data)
+            else:
+                print("Vendor action failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class GetUserDetailsView(APIView):
     permission_classes=[IsAdminUser]
@@ -138,10 +149,13 @@ class GetUsersView(APIView):
     authentication_classes = [JWTUserAuthentication]
     serializer_classes = UserSerializer
     def get(self, request):
-    
-        users = User.objects.all()
-        serializer = UserSerializer(users,many=True)   
-        return Response(serializer.data)
+        try:
+            users = User.objects.all()
+            serializer = UserSerializer(users,many=True)   
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class GetVendorDetailsView(APIView):
     permission_classes=[IsAdminUser]
@@ -166,10 +180,13 @@ class GetVendorsView(APIView):
     authentication_classes = [JWTUserAuthentication]
     serializer_classes = VendorSerializer
     def get(self, request):
-    
-        vendors = Vendor.objects.all()
-        serializer = VendorSerializer(vendors,many=True)   
-        return Response(serializer.data)
+        try:
+            vendors = Vendor.objects.all()
+            serializer = VendorSerializer(vendors,many=True)   
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
 class GetVendorsByDistrictView(APIView):
@@ -179,10 +196,13 @@ class GetVendorsByDistrictView(APIView):
     def get(self, request,id):
 
         """required field : district id"""
-    
-        vendors = Vendor.objects.filter(district=id)
-        serializer = VendorSerializer(vendors,many=True)   
-        return Response(serializer.data)
+        try:
+            vendors = Vendor.objects.filter(district=id)
+            serializer = VendorSerializer(vendors,many=True)   
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class GetVendorsByCityView(APIView):
     permission_classes=[IsAdminUser]
@@ -192,10 +212,13 @@ class GetVendorsByCityView(APIView):
     
         """required field : city id"""
 
-
-        vendors = Vendor.objects.filter(city=id)
-        serializer = VendorSerializer(vendors,many=True)   
-        return Response(serializer.data)
+        try:
+            vendors = Vendor.objects.filter(city=id)
+            serializer = VendorSerializer(vendors,many=True)   
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class AddDistrictView(APIView):
     permission_classes=[IsAdminUser]
@@ -204,21 +227,24 @@ class AddDistrictView(APIView):
     def post(self,request):
 
         """required field : district-string """
-
-        data = request.data
-        serializer = self.serializer_classes(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            
-            print(serializer.data)
-            
-            response={
-                "data" : serializer.data
-            }
-            return Response(response)
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors)
+        try:
+            data = request.data
+            serializer = self.serializer_classes(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                
+                print(serializer.data)
+                
+                response={
+                    "data" : serializer.data
+                }
+                return Response(response)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class AddCityView(APIView):
     permission_classes=[IsAdminUser]
@@ -228,21 +254,24 @@ class AddCityView(APIView):
 
         """required field : district-id, city-string"""
 
-
-        data = request.data
-        serializer = self.serializer_classes(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            
-            print(serializer.data)
-            
-            response={
-                "data" : serializer.data
-            }
-            return Response(response)
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors)
+        try:
+            data = request.data
+            serializer = self.serializer_classes(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                
+                print(serializer.data)
+                
+                response={
+                    "data" : serializer.data
+                }
+                return Response(response)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateDistrictView(APIView):
     permission_classes=[IsAdminUser]
@@ -251,47 +280,59 @@ class UpdateDistrictView(APIView):
 
         """required field : district id"""
 
-
-        details = District.objects.get(id=id)
-        serializer = DistrictSerializer(details,context={'request': request})
-        return Response(serializer.data)
+        try:
+            details = District.objects.get(id=id)
+            serializer = DistrictSerializer(details,context={'request': request})
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
     def put(self, request,id):
 
         """required field : district id"""
-
-        print(request.body)
-        details = District.objects.get(id=id)
-        serializer = DistrictSerializer(details,data=request.data,)
-        if serializer.is_valid():
-            print(serializer.validated_data)
-            serializer.save()
-            print("Update district successfully updated")
-            return Response(serializer.data)
-        else:
-            print("Update district failed")
-            return Response(serializer.errors)    
+        try:
+            print(request.body)
+            details = District.objects.get(id=id)
+            serializer = DistrictSerializer(details,data=request.data,)
+            if serializer.is_valid():
+                print(serializer.validated_data)
+                serializer.save()
+                print("Update district successfully updated")
+                return Response(serializer.data)
+            else:
+                print("Update district failed")
+                return Response(serializer.errors)    
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
     def delete(self, request,id):
 
         """required field : district id"""
-
-        details = District.objects.get(id=id)
-        details.delete()
-        return Response({'message':'District deleted'})
+        try:
+            details = District.objects.get(id=id)
+            details.delete()
+            return Response({'message':'District deleted'})
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
     def patch(self, request,id):
 
         """required field : district id"""
-
-        details = District.objects.get(id=id)
-        serializer = DistrictSerializer(details,data=request.data,partial = True)
-        if serializer.is_valid():
-            print(serializer.validated_data)
-            serializer.save()
-            print("Update district successfully updated")
-            return Response(serializer.data)
-        else:
-            print("Update district failed")
-            print(serializer.errors)
-            return Response(serializer.errors)
+        try:
+            details = District.objects.get(id=id)
+            serializer = DistrictSerializer(details,data=request.data,partial = True)
+            if serializer.is_valid():
+                print(serializer.validated_data)
+                serializer.save()
+                print("Update district successfully updated")
+                return Response(serializer.data)
+            else:
+                print("Update district failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateCityView(APIView):
     permission_classes=[IsAdminUser]
@@ -299,85 +340,112 @@ class UpdateCityView(APIView):
     def get(self, request,id):
 
         """required field : city id"""
-
-        details = City.objects.get(id=id)
-        serializer = CitySerializer(details,context={'request': request})
-        return Response(serializer.data)
+        try:
+            details = City.objects.get(id=id)
+            serializer = CitySerializer(details,context={'request': request})
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
     def put(self, request,id):
 
         """required field : city id"""
 
+        try:
+            print(request.body)
+            details = City.objects.get(id=id)
+            serializer = CitySerializer(details,data=request.data,)
+            if serializer.is_valid():
+                print(serializer.validated_data)
+                serializer.save()
+                print("Update city successfully updated")
+                return Response(serializer.data)
+            else:
+                print("Update city failed")
+                return Response(serializer.errors)   
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-        print(request.body)
-        details = City.objects.get(id=id)
-        serializer = CitySerializer(details,data=request.data,)
-        if serializer.is_valid():
-            print(serializer.validated_data)
-            serializer.save()
-            print("Update city successfully updated")
-            return Response(serializer.data)
-        else:
-            print("Update city failed")
-            return Response(serializer.errors)    
     def delete(self, request,id):
 
         """required field : city id"""
+        try:
+            details = City.objects.get(id=id)
+            details.delete()
+            return Response({'message':'City deleted'})
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-        details = City.objects.get(id=id)
-        details.delete()
-        return Response({'message':'City deleted'})
     def patch(self, request,id):
 
         """required field : city id"""
 
+        try:
 
-        details = City.objects.get(id=id)
-        serializer = CitySerializer(details,data=request.data,partial = True)
-        if serializer.is_valid():
-            print(serializer.validated_data)
-            serializer.save()
-            print("Update city successfully updated")
-            return Response(serializer.data)
-        else:
-            print("Update city failed")
-            print(serializer.errors)
-            return Response(serializer.errors)
+            details = City.objects.get(id=id)
+            serializer = CitySerializer(details,data=request.data,partial = True)
+            if serializer.is_valid():
+                print(serializer.validated_data)
+                serializer.save()
+                print("Update city successfully updated")
+                return Response(serializer.data)
+            else:
+                print("Update city failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class GetDistrictsView(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def get(self, request):
-    
-        districts = District.objects.all()
-        serializer = DistrictSerializer(districts,many=True)   
-        return Response(serializer.data)
+        try:
+            districts = District.objects.all()
+            serializer = DistrictSerializer(districts,many=True)   
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class GetCitiesView(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def get(self, request):
-    
-        cities = City.objects.all()
-        serializer = CitySerializer(cities,many=True)   
-        return Response(serializer.data)
+        try:
+            cities = City.objects.all()
+            serializer = CitySerializer(cities,many=True)   
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class GetCityenqueryView(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def get(self, request):
-    
-        cities = Cityenquery.objects.all()
-        serializer = CityenquerySerializer(cities,many=True)   
-        return Response(serializer.data)
+        try:
+            cities = Cityenquery.objects.all()
+            serializer = CityenquerySerializer(cities,many=True)   
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class GetUnapprovedCityenqueryView(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def get(self, request):
-    
-        cities = Cityenquery.objects.all().exclude(is_approved=True) 
-        serializer = CityenquerySerializer(cities,many=True)  
-        return Response(serializer.data)
+        try:
+            cities = Cityenquery.objects.all().exclude(is_approved=True) 
+            serializer = CityenquerySerializer(cities,many=True)  
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class ApproveCityenqueryView(APIView):
     permission_classes=[IsAdminUser]
@@ -385,34 +453,37 @@ class ApproveCityenqueryView(APIView):
     def patch(self, request,id):
 
         """required field : cityenquery id"""
-        
-        cities = Cityenquery.objects.get(id=id)
-        cities.is_approved=True
-        print(cities.is_approved)
-        serializer = CityenquerySerializer(cities,data=request.data,partial = True)
-        if serializer.is_valid():
-            serializer.save()
+        try:
+            cities = Cityenquery.objects.get(id=id)
+            cities.is_approved=True
+            print(cities.is_approved)
+            serializer = CityenquerySerializer(cities,data=request.data,partial = True)
+            if serializer.is_valid():
+                serializer.save()
 
-            print('-------------------')
-            print(cities.email)
-            print('---------------')
+                print('-------------------')
+                print(cities.email)
+                print('---------------')
 
-            mailingemail= cities.email
-            print(mailingemail)
-            
-            send_mail('Hello  ',
-            'You have requested for The city on your registration.We are sorry for not verified that City.Now can register . Please register again.',
-            'ashrafchekintakath@gmail.com'
-            ,[mailingemail]   
-            ,fail_silently=False)
+                mailingemail= cities.email
+                print(mailingemail)
+                
+                send_mail('Hello  ',
+                'You have requested for The city on your registration.We are sorry for not verified that City.Now can register . Please register again.',
+                'ashrafchekintakath@gmail.com'
+                ,[mailingemail]   
+                ,fail_silently=False)
 
 
-            print("Vendor verified Successfully")
-            return Response(serializer.data)
-        else:
-            print("Vendor verification failed")
-            print(serializer.errors)
-            return Response(serializer.errors)
+                print("Vendor verified Successfully")
+                return Response(serializer.data)
+            else:
+                print("Vendor verification failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
     
 
 class AddCategoryView(APIView):
@@ -421,17 +492,21 @@ class AddCategoryView(APIView):
 
     def post(self, request):
         """ required field : category_name - string"""
-        data = request.data
-        request.data._mutable=True
-        data['slug']=slugify(data['category_name'])
-        data.update(request.data)
-        serializer = CategorySerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors)
+        try:
+            data = request.data
+            request.data._mutable=True
+            data['slug']=slugify(data['category_name'])
+            data.update(request.data)
+            serializer = CategorySerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AddMoviesView(APIView):
@@ -441,18 +516,21 @@ class AddMoviesView(APIView):
     def post(self, request):
 
         """ required field : movie_name - string, category_name - id, tmdb_id - string"""
-
-        serializer = MovieSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            print(serializer.data['movie_name'])
-            moviename=serializer.data['movie_name']
-            
-            send_moviemail_func.delay()
-            return Response(serializer.data)
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors)
+        try:
+            serializer = MovieSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                print(serializer.data['movie_name'])
+                moviename=serializer.data['movie_name']
+                
+                send_moviemail_func.delay()
+                return Response(serializer.data)
+            else:
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class BlockMovie(APIView):
     permission_classes=[IsAdminUser]
@@ -460,22 +538,25 @@ class BlockMovie(APIView):
     def patch(self, request,id):
 
         """ required field : movie id"""
-
-        movie = Movie.objects.get(id=id)
-        if movie.is_active==True:
-            movie.is_active=False
-        else:
-            movie.is_active=True
-        print(movie.is_active)
-        serializer = MovieSerializer(movie,data=request.data,partial = True)
-        if serializer.is_valid():
-            serializer.save()
-            print("Movie action Successfully")
-            return Response(serializer.data)
-        else:
-            print("Movie action failed")
-            print(serializer.errors)
-            return Response(serializer.errors)
+        try:
+            movie = Movie.objects.get(id=id)
+            if movie.is_active==True:
+                movie.is_active=False
+            else:
+                movie.is_active=True
+            print(movie.is_active)
+            serializer = MovieSerializer(movie,data=request.data,partial = True)
+            if serializer.is_valid():
+                serializer.save()
+                print("Movie action Successfully")
+                return Response(serializer.data)
+            else:
+                print("Movie action failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateMovie(APIView):
     permission_classes=[IsAdminUser]
@@ -483,39 +564,49 @@ class UpdateMovie(APIView):
     def patch(self, request,id):
 
         """ required field : movie id"""
+        try:
+            movie = Movie.objects.get(id=id)
+            serializer = MovieSerializer(movie,data=request.data,partial = True)
+            if serializer.is_valid():
+                serializer.save()
+                print("Movie update Successfully")
+                return Response(serializer.data)
+            else:
+                print("Movie update failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-        movie = Movie.objects.get(id=id)
-        serializer = MovieSerializer(movie,data=request.data,partial = True)
-        if serializer.is_valid():
-            serializer.save()
-            print("Movie update Successfully")
-            return Response(serializer.data)
-        else:
-            print("Movie update failed")
-            print(serializer.errors)
-            return Response(serializer.errors)
     def delete(self, request,id):
 
         """ required field : movie id"""
-
-        details = Movie.objects.get(id=id)
-        details.delete()
-        return Response({'message':'Movie deleted'})
+        try:
+            details = Movie.objects.get(id=id)
+            details.delete()
+            return Response({'message':'Movie deleted'})
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
     def put(self, request,id):
 
         """ required field : movie id"""
 
-
-        movie = Movie.objects.get(id=id)
-        serializer = MovieSerializer(movie,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            print("Movie update Successfully")
-            return Response(serializer.data)
-        else:
-            print("Movie update failed")
-            print(serializer.errors)
-            return Response(serializer.errors)
+        try:
+            movie = Movie.objects.get(id=id)
+            serializer = MovieSerializer(movie,data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                print("Movie update Successfully")
+                return Response(serializer.data)
+            else:
+                print("Movie update failed")
+                print(serializer.errors)
+                return Response(serializer.errors)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TMDBNowplayingMovies(APIView):
@@ -523,31 +614,35 @@ class TMDBNowplayingMovies(APIView):
     authentication_classes = [JWTUserAuthentication]
 
     def get(self,request):
-        url='https://api.themoviedb.org/3/movie/now_playing?api_key='+settings.API_KEY
-        response=requests.get(url)
-        print(response)
-        data=response.json()
-        results=data['results']
-        # final=results[0]
-        # print(final['id'])
-        # print(final['original_title'])
-        
-        answer={}
+        try:
+            url='https://api.themoviedb.org/3/movie/now_playing?api_key='+settings.API_KEY
+            response=requests.get(url)
+            print(response)
+            data=response.json()
+            results=data['results']
+            # final=results[0]
+            # print(final['id'])
+            # print(final['original_title'])
+            
+            answer={}
 
-        for a in range(20):
-            final=results[a]
-            print(type(final))
-            print(final['id'])
-            print(final['original_title'])
-            
-            # answer[a]=final['id'],final['original_title']
-            answer[final['id']]=final['original_title']
-            
-        print('********************')
-        print(answer)
-        # return Response(results)
-        # return Response(data)
-        return Response(answer)
+            for a in range(20):
+                final=results[a]
+                print(type(final))
+                print(final['id'])
+                print(final['original_title'])
+                
+                # answer[a]=final['id'],final['original_title']
+                answer[final['id']]=final['original_title']
+                
+            print('********************')
+            print(answer)
+            # return Response(results)
+            # return Response(data)
+            return Response(answer)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 # class TMDBMovieDetails(APIView):
 #         permission_classes=[IsAdminUser]
@@ -561,12 +656,12 @@ class TMDBNowplayingMovies(APIView):
 #             return Response(data)
 
 class TMDBMovieDetails(APIView):
-        permission_classes=[IsAdminUser]
-        authentication_classes = [JWTUserAuthentication]
+    permission_classes=[IsAdminUser]
+    authentication_classes = [JWTUserAuthentication]
 
-        def get(self,request,id):
-            """ required field : movie id"""
-
+    def get(self,request,id):
+        """ required field : movie id"""
+        try:
             print('************************************')
             movie=Movie.objects.get(id=id)
             print(movie)
@@ -578,15 +673,21 @@ class TMDBMovieDetails(APIView):
             print(response)
             data=response.json()
             return Response(data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class MovieDetails(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def get(self, request):
-    
-        movie = Movie.objects.all()
-        serializer =MovieSerializer(movie,many=True)   
-        return Response(serializer.data)
+        try:
+            movie = Movie.objects.all()
+            serializer =MovieSerializer(movie,many=True)   
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class GetAllMovieByLanguage(APIView):
     permission_classes=[IsAdminUser]
@@ -595,33 +696,42 @@ class GetAllMovieByLanguage(APIView):
 
         """ required field : category id"""
 
-        
-        movie = Movie.objects.filter(category_name=id)
-        serializer =MovieSerializer(movie,many=True)
-         
-        return Response(serializer.data)
+        try:
+            movie = Movie.objects.filter(category_name=id)
+            serializer =MovieSerializer(movie,many=True)
+            
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class GetAllBookedDetails(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def get(self, request):
 
-        
-        ticket = BokkingTicket.objects.all()
-        serializer =BookingTicketSerializer(ticket,many=True)
-         
-        return Response(serializer.data)
+        try:
+            ticket = BokkingTicket.objects.all()
+            serializer =BookingTicketSerializer(ticket,many=True)
+            
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class GetAllBrokerCharge(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     def get(self, request):
 
-        
-        ticket = BrokerCharge.objects.all()
-        serializer =BrokerChargeSerializer(ticket,many=True)
-         
-        return Response(serializer.data)
+        try:
+            ticket = BrokerCharge.objects.all()
+            serializer =BrokerChargeSerializer(ticket,many=True)
+            
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AllPaidTicket(APIView):
@@ -629,17 +739,23 @@ class AllPaidTicket(APIView):
     authentication_classes = [JWTUserAuthentication]
     serializer_classes = VendorSerializer
     def get(self, request):
-    
-        ticket = BokkingTicket.objects.filter(is_paid=True)
-        serializer = BookingTicketSerializer(ticket,many=True)   
-        return Response(serializer.data)
+        try:
+            ticket = BokkingTicket.objects.filter(is_paid=True)
+            serializer = BookingTicketSerializer(ticket,many=True)   
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class AllPendingTicket(APIView):
     permission_classes=[IsAdminUser]
     authentication_classes = [JWTUserAuthentication]
     serializer_classes = VendorSerializer
     def get(self, request):
-    
-        ticket = BokkingTicket.objects.filter(is_paid=False)
-        serializer = BookingTicketSerializer(ticket,many=True)   
-        return Response(serializer.data)
+        try:
+            ticket = BokkingTicket.objects.filter(is_paid=False)
+            serializer = BookingTicketSerializer(ticket,many=True)   
+            return Response(serializer.data)
+        except:
+            message = {'detail':'somthing whent worng'}
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
