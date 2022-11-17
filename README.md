@@ -30,18 +30,22 @@ And navigate to http://127.0.0.1:8000/
 # Documentation
 ## Admin api
 
+
+- To add language
+
 ### POST
 /admin_api/addcategory/
 
 required field : category_name - string
 
 
-
+- To add city
 ### POST
 /admin_api/addcity/
 
 required field : district-id, city-string
 
+- To add district
 ### POST
 /admin_api/adddistrict/
 
