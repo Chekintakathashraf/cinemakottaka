@@ -440,50 +440,74 @@ required body field : phone_number-10 digit number, code - string
 ```
 ## Vender API
 
-### POST
+### To add screen for vendor
+```POST
 /vendor_api/addscreen/
-required field : screen_name - string, total_seet - number, price- number
+required body field : screen_name - string, total_seet - number, price- number
+```
 
-### POST
+### To add seat for particular show
+```POST
 /vendor_api/addseat/
-required field : seet_no-1, show-show id, screen-screen id
+required body field : seet_no-1, show-show id, screen-screen id
+```
 
-### POST
+### Too add show
+```POST
 /vendor_api/addshow/
-required field : movie - movie id , screen - creen id, date- date id, time - time id
+required body field : movie - movie id , screen - creen id, date- date id, time - time id
+```
 
-### POST
+### To add show date
+```POST
 /vendor_api/addshowdate/
-required field : time - hour:minute:second
+required body field : time - hour:minute:second
+```
 
-### POST
+### To add showtime
+```POST
 /vendor_api/addshowtime/
-required field : date - year-month-day
+required body field : date - year-month-day
+```
 
-### PATCH
+### To get block and unblock show
+```PATCH
 /vendor_api/blockshow/{id}/
-required field : show id
+required param : show id
+```
 
-### GET
+### To get booked seat by show
+```GET
 /vendor_api/bookedseatbyshow/{id}/
-required field : show id
+required param : show id
+```
 
-### GET
+### To get all finished show
+```GET
 /vendor_api/getallfinishedshow/
+```
 
-### GET
+### To get all screen
+```GET
 /vendor_api/getallscreen/
+```
 
-### GET
+### To get all screen by movie
+```GET
 /vendor_api/getallscreenbymovieid/{id}/
-required field : movie id
+required param : movie id
+```
 
-### GET
+### To get all screen by show
+```GET
 /vendor_api/getallscreenbyshow/{id}/
-required field : show id
+required param : show id
+```
 
-### GET
+### To get all show in vendor
+```GET
 /vendor_api/getallshow/
+```
 
 ### To get all show by date
 ```GET
