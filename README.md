@@ -35,116 +35,166 @@ And navigate to http://127.0.0.1:8000/
 ``` POST
 /admin_api/addcategory/
 
-required field : category_name - string
+required body field : category_name - string
 ```
 
-### POST
+### To add city
+```POST
 /admin_api/addcity/
 
-required field : district-id, city-string
+required body field : district-id, city-string
+```
 
-### POST
+### To add district
+```POST
 /admin_api/adddistrict/
 
-required field : district-string
+required body field : district-string
+```
 
-### POST
+### To add movies 
+```POST
 /admin_api/addmovie/
 
-required field : movie_name - string, category_name - id, tmdb_id - string
+required body field : movie_name - string, category_name - id, tmdb_id - string
+```
 
-### PATCH
+### To aprove city enquary 
+```PATCH
 /admin_api/approvecityenquery/{id}/
 
-required field : cityenquery id
+required param : cityenquery id
+```
 
-### PATCH
+###To block mocie
+```PATCH
 /admin_api/blockmovie/{id}/
 
-required field : movie id
+required param : movie id
+```
 
-### PATCH
+### To block user
+```PATCH
 /admin_api/blockuser/{id}/
 
-required field : user id
+required param : user id
+```
 
-### PATCH
+### To block vendor
+```PATCH
 /admin_api/blockvendor/{id}/
 
-required field : vendor id
+required param : vendor id
+```
 
-### GET
+### To get all movie by language
+```GET
 /admin_api/getallmoviebylanguage/{id}/
 
-required field : category id
+required param : category id
+```
 
-### GET
+### To get all paid ticket
+```GET
 /admin_api/getallpaidticket/
+```
 
-### GET
+### To get all pending ticket
+```GET
 /admin_api/getallpendingticket/
+```
 
-### GET
+### To get all booking details
+```GET
 /admin_api/getbookingdetails/
+```
 
-### GET
+### To get all broker charge details
+```GET
 /admin_api/getbrokerchargedetails/
+```
 
-### GET
+### To get all cities
+```GET
 /admin_api/getcities/
+```
 
-### GET
+### To get all enquired cities
+```GET
 /admin_api/getcityenquery/
+```
 
-### GET
+### To get all districts
+```GET
 /admin_api/getdistricts/
+```
 
-### GET
+### To get all un approved city enquiery
+```GET
 /admin_api/getunapprovedcityenquery/
+```
 
-### GET
+### To get a particular user details
+```GET
 /admin_api/getuserdetails/{id}/
 
-required field : user id
+required param : user id
+```
 
-### GET
+### To get all users 
+```GET
 /admin_api/getusers/
+```
 
-### GET
+### To get particular vendor details
+```GET
 /admin_api/getvendordetails/{id}/
 
-required field : vendor id
+required param : vendor id
+```
 
-### GET
+### To get all vendors
+```GET
 /admin_api/getvendors/
+```
 
-### GET
+### To get all vendor by city 
+```GET
 /admin_api/getvendorsbycity/{id}/
 
-required field : city id
+required param : city id
+```
 
-### GET
+### To get all vendors by district
+```GET
 /admin_api/getvendorsbydistrict/{id}/
 
-required field : district id
+required parm : district id
+```
 
-### GET
+### To get all movies
+```GET
 /admin_api/moviedetails/
+```
 
-### GET
+### To get a details of particular movie
+```GET
 /admin_api/tmdbmoviedetails/{id}/
 
-required field : movie id
+required param : movie id
+```
 
-### GET
+### To get now playing movie by tmdb
+```GET
 /admin_api/tmdbnowplayingmovies/
-
-### GET
+```
+### To update city
+```GET
 /admin_api/updatecity/{id}/
 
 required field : city id
 
-### PUT
+### To  PUT
 /admin_api/updatecity/{id}/
 
 required field : city id
