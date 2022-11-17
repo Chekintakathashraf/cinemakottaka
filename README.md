@@ -2,19 +2,19 @@
 
 # Getting started
 
-To get started you can simply clone this cinemakottaka project repository and install the dependencies.
+## To get started you can simply clone this cinemakottaka project repository and install the dependencies.
 
 
 
 git clone https://github.com/Chekintakathashraf/cinemakottaka/
 cd cd cinemakottaka
 
-Create a virtual environment to install dependencies in and activate it:
+## Create a virtual environment to install dependencies in and activate it:
 
 python3 -m venv venv
 source venv/bin/activate
 
-Then install the dependencies:
+## Then install the dependencies:
 
 (venv)$ pip install -r requirement.txt
 
