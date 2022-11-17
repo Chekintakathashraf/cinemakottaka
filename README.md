@@ -339,53 +339,81 @@ required field : phone_number-10 digit number
 ### POST
 /user_api/logoutuser/
 
-### PATCH
+### To make dummy payment without razorpay
+```PATCH
 /user_api/payment/{id}/
-required field : ticket id
+required param : ticket id
+```
 
-### POST
+### To refresh token
+```POST
 /user_api/refreshuser/
+```
 
-### POST
+### To register user
+```POST
 /user_api/register/
-required field : username-string, email-email, phone_number-10 digit number, password - string
+required body : username-string, email-email, phone_number-10 digit number, password - string
+```
 
-### GET
+### To get all seat details by show 
+```GET
 /user_api/seatofshow/{id}/
-required field : show id
+required param : show id
+```
 
-### PATCH
+### To select user current location
+```PATCH
 /user_api/selectlocation/
-required field : district-district id, city - city id
+required body field : district-district id, city - city id
+```
 
-### GET
+### To get show by our choice
+```GET
 /user_api/showbychoice/{date}/{time}/{vendor}/{movie}/
-required field : date id,time id,vendor id, movie id
+required param : date id,time id,vendor id, movie id
+```
 
-### GET
+### To get all showdate
+```GET
 /user_api/showdate/
+```
 
-### GET
+### To get all showtime
+```GET
 /user_api/showtime/
+```
 
-### GET
+### To get theater details
+```GET
 /user_api/theater/{id}/
-required field : movie id
+required param : movie id
+```
 
-### GET
+### To get therater by user city 
+```GET
 /user_api/theaterbycity/
+```
 
-### GET
+### To get movie tmdb details
+```GET
 /user_api/tmdbmoviedetails/{id}/
 required field : movie id
+```
 
-### GET
+### To get own user details
+```GET
 /user_api/user/
+```
 
-### POST
+### To verify the login user otp 
+```POST
 /user_api/verifyloginuserotp/
-required field : code - string
+required body field : code - string
+```
 
-### POST
+### To verify the User 
+```POST
 /user_api/verifyuser/
-required field : phone_number-10 digit number, code - string
+required body field : phone_number-10 digit number, code - string
+```
