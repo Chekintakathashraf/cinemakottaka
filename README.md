@@ -31,7 +31,7 @@ And navigate to http://127.0.0.1:8000/
 ## Admin api
 
 
-[To add language]
+[To add language]{}
 
 ### POST
 /admin_api/addcategory/
@@ -39,13 +39,13 @@ And navigate to http://127.0.0.1:8000/
 required field : category_name - string
 
 
-[To add city]
+[To add city]{}
 ### POST
 /admin_api/addcity/
 
 required field : district-id, city-string
 
-[To add district]
+[To add district]{}
 ### POST
 /admin_api/adddistrict/
 
