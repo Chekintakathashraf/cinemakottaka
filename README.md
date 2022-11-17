@@ -35,6 +35,8 @@ And navigate to http://127.0.0.1:8000/
 
 required field : category_name - string
 
+
+
 ### POST
 /admin_api/addcity/
 
