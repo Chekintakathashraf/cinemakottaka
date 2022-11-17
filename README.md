@@ -296,3 +296,96 @@ required param : movie id
 
 required param : vendor id
 ```
+
+## User API
+
+### GET
+/user_api/allcitybydistrict/{id}/
+required field : district id
+
+### GET
+/user_api/alldistrict/
+
+### GET
+/user_api/availableseatofshow/{id}/
+required field : show id
+
+### GET
+/user_api/bookedseatofshow/{id}/
+required field : show id
+
+### POST
+/user_api/bookticket/
+required field : show - show id, screen - screen id, seat_no - list of seat id
+
+### GET
+/user_api/getallmovie/
+
+### GET
+/user_api/getallmoviebylanguage/{id}/
+required field : language category id
+
+### GET
+/user_api/getallmoviecategory/
+
+### POST
+/user_api/loginuser/
+required field : phone_number-10 digit number, password - string
+
+### POST
+/user_api/loginuserwithotp/
+required field : phone_number-10 digit number
+
+### POST
+/user_api/logoutuser/
+
+### PATCH
+/user_api/payment/{id}/
+required field : ticket id
+
+### POST
+/user_api/refreshuser/
+
+### POST
+/user_api/register/
+required field : username-string, email-email, phone_number-10 digit number, password - string
+
+### GET
+/user_api/seatofshow/{id}/
+required field : show id
+
+### PATCH
+/user_api/selectlocation/
+required field : district-district id, city - city id
+
+### GET
+/user_api/showbychoice/{date}/{time}/{vendor}/{movie}/
+required field : date id,time id,vendor id, movie id
+
+### GET
+/user_api/showdate/
+
+### GET
+/user_api/showtime/
+
+### GET
+/user_api/theater/{id}/
+required field : movie id
+
+### GET
+/user_api/theaterbycity/
+
+### GET
+/user_api/tmdbmoviedetails/{id}/
+required field : movie id
+
+### GET
+/user_api/user/
+
+### POST
+/user_api/verifyloginuserotp/
+required field : code - string
+
+### POST
+/user_api/verifyuser/
+required field : phone_number-10 digit number, code - string
