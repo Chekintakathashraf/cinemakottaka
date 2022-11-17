@@ -22,7 +22,8 @@ Note the (venv) in front of the prompt. This indicates that this terminal sessio
 
 Once pip has finished downloading the dependencies:
 
-(venv)$ cd backend
+(venv)$ cd backend.
+
 (venv)$ python3 manage.py runserver
 
 And navigate to http://127.0.0.1:8000/
