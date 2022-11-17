@@ -438,3 +438,129 @@ required body field : code - string
 /user_api/verifyuser/
 required body field : phone_number-10 digit number, code - string
 ```
+## Vender API
+
+### POST
+/vendor_api/addscreen/
+required field : screen_name - string, total_seet - number, price- number
+
+### POST
+/vendor_api/addseat/
+required field : seet_no-1, show-show id, screen-screen id
+
+### POST
+/vendor_api/addshow/
+required field : movie - movie id , screen - creen id, date- date id, time - time id
+
+### POST
+/vendor_api/addshowdate/
+required field : time - hour:minute:second
+
+### POST
+/vendor_api/addshowtime/
+required field : date - year-month-day
+
+### PATCH
+/vendor_api/blockshow/{id}/
+required field : show id
+
+### GET
+/vendor_api/bookedseatbyshow/{id}/
+required field : show id
+
+### GET
+/vendor_api/getallfinishedshow/
+
+### GET
+/vendor_api/getallscreen/
+
+### GET
+/vendor_api/getallscreenbymovieid/{id}/
+required field : movie id
+
+### GET
+/vendor_api/getallscreenbyshow/{id}/
+required field : show id
+
+### GET
+/vendor_api/getallshow/
+
+### To get all show by date
+```GET
+/vendor_api/getallshowbydate/{id}/
+required param : date id
+```
+
+### To get all show by language
+```GET
+/vendor_api/getallshowbylanguage/{id}/
+required param : category id
+```
+
+### To get all show by movie
+```GET
+/vendor_api/getallshowbymovie/{id}/
+required param : movie id
+```
+
+### To get all show by screen
+```GET
+/vendor_api/getallshowbyscreen/{id}/
+required param : screen id
+```
+
+### To get all show by time
+```GET
+/vendor_api/getallshowbytime/{id}/
+required param : time id
+```
+
+### To get all upcomingshow 
+```GET
+/vendor_api/getallupcomingshow/
+```
+
+### Too login vendor
+```POST
+/vendor_api/loginvendor/
+required body field : email - email, password - string
+```
+
+### To logout vendor
+```POST
+/vendor_api/logoutvendor/
+```
+
+### To refresh token
+```POST
+/vendor_api/refreshvendor/
+```
+
+### To register vendor
+```POST
+/vendor_api/register/
+required body field : first_name - string, last_name - string, email-email, phone_number - 10 digit number, password - string, district - district id, city - city id or else other & cityenqueryname - string
+```
+
+### To get unbooked seat of particular show
+```GET
+/vendor_api/unbookedseatbyshow/{id}/
+required param : show id
+```
+
+### To update screen
+```PUT
+/vendor_api/updatescreen/{id}/
+required param : screen id
+```
+
+### To update screen
+```PATCH
+/vendor_api/updatescreen/{id}/
+required param : screen id
+```
+
+### To get our vendor details
+```GET
+/vendor_api/vendor/
+```
