@@ -24,6 +24,37 @@ Once pip has finished downloading the dependencies:
 
 (venv)$ cd backend.
 
+## Create The following Api Accounts
+
+- Twilio
+- Email-smtp
+- tmdb api
+- razor pay
+- celery
+- rabbit mq
+- redis
+
+## create .env file in project directry and paste this
+TWILIO_VERIFY_SERVICE_SID=
+TWILIO_ACCOUNT_SID=
+TWILIO_AUTH_TOKEN=
+
+
+EMAIL_BACKEND = 
+EMAIL_HOST = 
+EMAIL_PORT = 
+
+EMAIL_HOST_USER = 
+EMAIL_HOST_PASSWORD = 
+EMAIL_USE_TLS = True
+
+API_KEY=
+
+RAZORPAY_PUBLIC_KEY =
+RAZORPAY__SECRET_KEY =
+
+
+
 (venv)$ python3 manage.py runserver
 
 And navigate to http://127.0.0.1:8000/
