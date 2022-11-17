@@ -188,63 +188,70 @@ required param : movie id
 ```GET
 /admin_api/tmdbnowplayingmovies/
 ```
-### To update city
+### To get city
 ```GET
 /admin_api/updatecity/{id}/
 
-required field : city id
-
-### To  PUT
+required param : city id
+```
+### To update city
+```PUT
 /admin_api/updatecity/{id}/
 
-required field : city id
-
-### PATCH
+required param : city id
+```
+### To update district
+```PATCH
 /admin_api/updatecity/{id}/
 
-required field : city id
-
-### DELETE
+required param : city id
+```
+### To delete city
+```DELETE
 /admin_api/updatecity/{id}/
 
-required field : city id
-
-### GET
+required param : city id
+```
+### To get district details
+```GET
 /admin_api/updatedistrict/{id}/
 
-required field : district id
-
-### PUT
+required param : district id
+```
+### To update district
+```PUT
 /admin_api/updatedistrict/{id}/
 
-required field : district id
-
-### PATCH
+required param : district id
+```
+### To update district
+```PATCH
 /admin_api/updatedistrict/{id}/
 
-required field : district id
-
-### DELETE
+required param : district id
+```
+### To delete district
+```DELETE
 /admin_api/updatedistrict/{id}/
 
-required field : district id
+required param : district id
+```
 
-### PUT
+### To update movie 
+```PATCH
 /admin_api/updatemovie/{id}/
 
-required field : movie id
-
-### PATCH
+required param : movie id
+```
+### To delete movie 
+```DELETE
 /admin_api/updatemovie/{id}/
 
-required field : movie id
-
-### DELETE
-/admin_api/updatemovie/{id}/
-
-required field : movie id
-
-### PATCH
+required param : movie id
+```
+### To verify vendor 
+```PATCH
 /admin_api/verifyvendor/{id}/
 
-required field : vendor id
+required param : vendor id
+```
