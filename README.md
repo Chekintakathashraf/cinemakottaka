@@ -1,6 +1,7 @@
 # cinemakottaka
 
-Getting started
+# Getting started
+
 To get started you can simply clone this cinemakottaka project repository and install the dependencies.
 
 
