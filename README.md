@@ -107,7 +107,7 @@ required body field : movie_name - string, category_name - id, tmdb_id - string
 required param : cityenquery id
 ```
 
-###To block mocie
+### To block mocie
 ```PATCH
 /admin_api/blockmovie/{id}/
 
@@ -299,45 +299,66 @@ required param : vendor id
 
 ## User API
 
-### GET
+### To get all city by district
+```GET
 /user_api/allcitybydistrict/{id}/
 required field : district id
+```
 
-### GET
+### To get all districts
+```GET
 /user_api/alldistrict/
+```
 
-### GET
+### To get available seat of that show
+```GET
 /user_api/availableseatofshow/{id}/
 required field : show id
+```
 
-### GET
+### To get booked seat of that show
+```GET
 /user_api/bookedseatofshow/{id}/
 required field : show id
+```
 
-### POST
+### To bookticket 
+```POST
 /user_api/bookticket/
 required field : show - show id, screen - screen id, seat_no - list of seat id
+```
 
-### GET
+### To get all movie
+```GET
 /user_api/getallmovie/
+```
 
-### GET
+### To get all movie by languages
+```GET
 /user_api/getallmoviebylanguage/{id}/
 required field : language category id
-
-### GET
+```
+### To get all movie languages
+```GET
 /user_api/getallmoviecategory/
+```
 
-### POST
+### To login user with password
+```POST
 /user_api/loginuser/
 required field : phone_number-10 digit number, password - string
+```
 
-### POST
+### To login user with otp
+```POST
 /user_api/loginuserwithotp/
 required field : phone_number-10 digit number
+```
 
-### POST
+### To logout
+```POST
 /user_api/logoutuser/
+```
 
 ### To make dummy payment without razorpay
 ```PATCH
