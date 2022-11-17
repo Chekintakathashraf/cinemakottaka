@@ -6,12 +6,14 @@
 
 
 
-git clone https://github.com/Chekintakathashraf/cinemakottaka/
-cd cd cinemakottaka
+git clone https://github.com/Chekintakathashraf/cinemakottaka/ .
+
+cd cinemakottaka
 
 ## Create a virtual environment to install dependencies in and activate it:
 
-python3 -m venv venv
+python3 -m venv venv.
+
 source venv/bin/activate
 
 ## Then install the dependencies:
