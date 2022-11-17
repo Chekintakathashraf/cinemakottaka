@@ -31,7 +31,7 @@ And navigate to http://127.0.0.1:8000/
 ## Admin api
 
 
-
+## To add language of movie
 ### POST
 /admin_api/addcategory/
 
