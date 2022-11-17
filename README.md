@@ -32,11 +32,11 @@ And navigate to http://127.0.0.1:8000/
 
 
 ## To add language of movie
-### POST
+``` POST
 /admin_api/addcategory/
 
 required field : category_name - string
-
+```
 
 ### POST
 /admin_api/addcity/
