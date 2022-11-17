@@ -6,13 +6,13 @@
 
 
 
-git clone https://github.com/Chekintakathashraf/cinemakottaka/ .
+git clone https://github.com/Chekintakathashraf/cinemakottaka/ 
 
 cd cinemakottaka
 
 ## Create a virtual environment to install dependencies in and activate it:
 
-python3 -m venv venv.
+python3 -m venv venv
 
 source venv/bin/activate
 
@@ -38,21 +38,28 @@ Once pip has finished downloading the dependencies:
 
 ## create .env file in project directry and paste this
 TWILIO_VERIFY_SERVICE_SID=
+
 TWILIO_ACCOUNT_SID=
+
 TWILIO_AUTH_TOKEN=
 
 
 EMAIL_BACKEND = 
+
 EMAIL_HOST = 
+
 EMAIL_PORT = 
 
 EMAIL_HOST_USER = 
+
 EMAIL_HOST_PASSWORD = 
+
 EMAIL_USE_TLS = True
 
 API_KEY=
 
 RAZORPAY_PUBLIC_KEY =
+
 RAZORPAY__SECRET_KEY =
 
 
